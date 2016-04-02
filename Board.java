@@ -2,14 +2,15 @@ public class Board {
 
     private static int boardSize;
     private char[][] boardState;
+    private int possibleMoves;
+    private ArrayList<Cell> cells;
 
     public Board(int boardSize) {
         this.boardSize = boardSize;
-        this.boardState = boardState;
     }
 
-    public calcAllPossibleMoves() {
-
+    public getPossibleMoves() {
+        return possibleMoves;
     }
 
 
