@@ -1,4 +1,4 @@
-import java.awt.Point;
+import Point;
 
 public class Cell {
 
@@ -35,6 +35,8 @@ public class Cell {
 
     }
 
-
+    public Point getPointOnBoard() {
+        return this.pointOnBoard;
+    }
 
 }
