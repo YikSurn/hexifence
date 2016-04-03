@@ -8,8 +8,9 @@ public class Board {
     private int possibleMoves;
     private ArrayList<Cell> cells;
 
-    public Board(int boardSize) {
+    public Board(int boardSize, char[][] boardState) {
         this.boardSize = boardSize;
+        this.boardState = boardState;
     }
 
     public getPossibleMoves() {
