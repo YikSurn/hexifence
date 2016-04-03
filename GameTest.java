@@ -33,6 +33,8 @@ public class GameTest {
             
             input.close();
             Board gameBoard = new Board(boardSize, boardState);
+            System.out.println(gamBoard.getPossibleMoves());
+            
         }
         catch (IllegalStateException e) {
             System.out.println(e);

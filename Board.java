@@ -54,4 +54,16 @@ public class Board {
 
         return commonEdgePoint;
     }
+
+    /* Return max cell available for captured 
+    */
+    public int maxCellAvailableCapture() {
+        int counter = 0;
+        for(Cell hex: cells) {
+            if (hex.canCaptureByOneMove()) {
+                counter++;
+            }
+        }
+        return counter;
+    }
 }

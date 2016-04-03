@@ -9,8 +9,9 @@ public class Cell {
     private ArrayList<Edge> edges;
     private HashMap<Edge, Cell> = new HashMap<Edge, Cell>();
 
-    public Cell(Point p) {
-        this.pointOnBoard = p;
+    public Cell(Point pointOnBoard, Point actualPoint) {
+        this.pointOnBoard = pointOnBoard;
+        this.actualPoint = actualPoint;
     }
 
     public int getNumSidesCaptured() {
