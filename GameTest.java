@@ -2,56 +2,46 @@ import java.util.Scanner;
 
 public class GameTest {
 
-    public static char[] validChars = new char[] {'R', 'B', '+', '-'};
-
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
         char[][] boardState;
         int entries; // store max board state entries per row or col
         try {
+            Scanner input = new Scanner(System.in);
             int boardSize = input.nextInt();
             entries = 4*boardSize - 1;
             boardState = new char[entries][entries];
-            int row= 0, col = 0;
-            while (input.hasNext()) {
+            input.nextLine(); // consume <enter> from prev int input
+            int col;
+            for (int row=0; row < entries; row++) {
+                col = 0;
                 String tempStr = input.nextLine();
+                System.out.println(tempStr);
                 Scanner innerInput = new Scanner(tempStr);
-                while (innerInput.hasNext()) {
-                    // Check for improper character inputs
-                    char val = innerInput.next();
-                    if (existIn(val, validChars)) {
-                        boardState[row][col] = innerInput.next();
+                String validStr = innerInput.next("[RB+-]");
+                while (validStr != null) {
+                    boardState[row][col] = validStr.charAt(0);
+                    if (col == entries-1) {
+                        break;
                     }
                     else {
-                        System.out.println("Invalid syntax for board state. Only these characters are valid: R, B, +, -");
-                        System.exit(0);
-                    }
-                    if (col > entries) {
-                        System.out.println("Exceeded max col input for board state");
-                        System.exit(0);
+                        validStr = innerInput.next("[RB+-]");
                     }
                     col++;
                 }
-                if (row > entries) {
-                    System.out.println("Exceeded max row input for board state");
-                    System.exit(0);
-                }
-                row++;
+                innerInput.close();
             }
+            
+            input.close();
+        }
+        catch (IllegalStateException e) {
+            System.out.println(e);
+            System.exit(0);
         }
         catch (Exception e) {
             // Temporary handle errors
-            System.out.println("Invalid input");
+            System.out.println("Invalid input. One of the following may have occured:");
+            System.out.println("Input chars that are not R B + or -");
             System.exit(0);
         }
-    }
-
-    public boolean existIn(char a, char[] charArray) {
-        for (char c: charArray) {
-            if (c == a) {
-                return true;
-            }
-        }
-        return false;
     }
 }
