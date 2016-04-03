@@ -7,5 +7,5 @@ Algorithms for game handling:
 3. With the given list of cell coordinates, coordinates of their respective edges are calculated (Note: create a function to handle that), and saved
 4. To link an edge to two adjacent cells, we grab the edge(s) that is in between the adjacent cell(s). This would be based on the coordinates on 2D array of given board state
 
-----------------------
+
 
