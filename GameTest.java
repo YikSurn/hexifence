@@ -30,11 +30,10 @@ public class GameTest {
                 }
                 innerInput.close();
             }
-            
             input.close();
+
             Board gameBoard = new Board(boardSize, boardState);
-            System.out.println(gamBoard.getPossibleMoves());
-            
+            System.out.println(gameBoard.getPossibleMoves());
         }
         catch (IllegalStateException e) {
             System.out.println(e);

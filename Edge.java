@@ -1,5 +1,3 @@
-import java.awt.Point;
-
 public class Edge {
 
     private boolean hasBeenCaptured;

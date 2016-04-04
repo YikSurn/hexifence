@@ -1,5 +1,4 @@
-import Cell;
-import Point;
+import java.util.ArrayList;
 
 public class Board {
 
@@ -13,7 +12,7 @@ public class Board {
         this.boardState = boardState;
     }
 
-    public getPossibleMoves() {
+    public int getPossibleMoves() {
         return possibleMoves;
     }
 
@@ -48,18 +47,18 @@ public class Board {
 
         // The common edge between two cells would have coordinates
         // that are directly in the middle of the two cells
-        commonEdgePointX = (c1X + c2X)/2;
-        commonEdgePointY = (c1Y + c2Y)/2;
+        int commonEdgePointX = (c1X + c2X)/2;
+        int commonEdgePointY = (c1Y + c2Y)/2;
         Point commonEdgePoint = new Point(commonEdgePointX, commonEdgePointY);
 
         return commonEdgePoint;
     }
 
-    /* Return max cell available for captured 
+    /* Return max cell available for captured
     */
     public int maxCellAvailableCapture() {
         int counter = 0;
-        for(Cell hex: cells) {
+        for(Cell hex: this.cells) {
             if (hex.canCaptureByOneMove()) {
                 counter++;
             }
