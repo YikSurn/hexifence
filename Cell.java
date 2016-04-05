@@ -2,8 +2,10 @@ import java.util.ArrayList;
 
 public class Cell {
 
-    private static int numSidesCaptured;
-    private static int layerNum;
+    public static final int MAX_EDGES = 6;
+
+    private int numSidesCaptured;
+    private int layerNum;
     private Point pointOnBoard;
     private Point actualPoint;
     private ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -55,6 +57,18 @@ public class Cell {
     */
     public ArrayList<Edge> getEdges() {
         return this.edges;
+    }
+
+    /* Return a list of uncaptured edges that belongs to this cell
+    */
+    public ArrayList<Edge> getUncapturedEdges() {
+        ArrayList<Edge> edges = new ArrayList<Edge>(this.edges.size());
+        for (Edge edge: this.edges) {
+            if (!edge.getHasBeenCaptured()) {
+                edges.add(edge);
+            }
+        }
+        return edges;
     }
 
     /* Return true if this cell can be captured by one move, false otherwise

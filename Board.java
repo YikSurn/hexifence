@@ -148,7 +148,43 @@ public class Board {
         return possibleMoves;
     }
 
-    // public int maxCellCaptureByOneMove() {
+    public int maxCellCaptureByOneMove() {
+        boolean atLeastOneCellCapturable = false;
 
-    // }
+        for (Cell c: this.cells) {
+            if (c.getNumSidesCaptured() == Cell.MAX_EDGES - 1) {
+                // Check if the uncaptured edge is the common edge to another capturable cell
+                Edge uncapturedEdge = c.getUncapturedEdges().get(0);
+                ArrayList<Cell> cells = this.EdgeToCells.get(uncapturedEdge);
+                // Check if uncaptured edge has an adjacent cell
+                if (cells.size() == 2) {
+                    for (Cell adjacentCell: cells) {
+                        // Check if the adjacent cell can be captured in one move
+                        // If yes, max cells that can be captured is these two cells
+                        if (adjacentCell != c && (adjacentCell.getNumSidesCaptured() == Cell.MAX_EDGES - 1)) {
+                            return 2;
+                        }
+                    }
+                } else if (!atLeastOneCellCapturable) {
+                    atLeastOneCellCapturable = true;
+                }
+            }
+        }
+
+        if (atLeastOneCellCapturable) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public int numCellsForCapture() {
+        int count = 0;
+        for (Cell c: this.cells) {
+            if (c.getNumSidesCaptured() == Cell.MAX_EDGES - 1) {
+                count++;
+            }
+        }
+        return count;
+    }
 }
