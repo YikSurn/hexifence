@@ -18,6 +18,8 @@ public class Cell {
         return this.numSidesCaptured;
     }
 
+    
+
     /* Returns a list of actual points of this cell's adjacent cells
     */
     public ArrayList<Point> adjacentCells(int boardSize) {

@@ -17,6 +17,9 @@ public class Board {
         return possibleMoves;
     }
 
+    public initBoard() {
+    }
+
     /* Returns the points of the edges of a cell
     */
     private ArrayList<Point> getPointOfEdges(Cell cell) {
@@ -65,5 +68,9 @@ public class Board {
             }
         }
         return counter;
+    }
+
+    public int maxCellCaptureByOneMove() {
+
     }
 }
