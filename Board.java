@@ -7,7 +7,7 @@ public class Board {
     private static int boardSize;
     private char[][] boardState;
     private int possibleMoves;
-    private ArrayList<Cell> cells;
+    private ArrayList<Cell> cells = new ArrayList<Cell>();
     private HashMap<Edge, ArrayList<Cell>> EdgeToCells = new HashMap<Edge, ArrayList<Cell>>();
 
     public Board(int boardSize, char[][] boardState) {
@@ -39,6 +39,7 @@ public class Board {
         }
 
         // Loop through cell points, instantiate cells and add their edges to the cells
+        ArrayList<Point> edgePoints = new ArrayList<Point>(); // store points of edges 
         for (int i = 0; i < cellPoints.size(); i++) {
             Cell cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
             int cellX = cellPoints.get(i).getX();
@@ -46,6 +47,7 @@ public class Board {
 
             if (this.boardState[cellX][cellY] != '-') {
                 System.out.format("Error. The coordinate (%d, %d) should be a '-' to denote the location of a cell\n", cellX, cellY);
+                System.exit(0);
             }
 
             ArrayList<Point> edgesPoints = getPointOfEdges(cell);
@@ -57,9 +59,10 @@ public class Board {
 
                 if (value == '-') {
                     System.out.format("Error. The coordinate (%d, %d) should be a valid edge value: B, R or +\n", pointX, pointY);
+                    System.exit(0);
                 } else {
                     Edge edge = new Edge(new Point(pointX, pointY), value);
-                    if (EdgeToCells.containsKey(edge)) {
+                    if (edgePoints.contains(edge.getPointOnBoard())) {
                         // Append to dictionary's values
                         ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
                         edgeCells.add(cell);
@@ -69,6 +72,7 @@ public class Board {
                         // Create new key, values
                         ArrayList<Cell> edgeCells = new ArrayList<Cell>();
                         edgeCells.add(cell);
+                        edgePoints.add(edge.getPointOnBoard());
                         EdgeToCells.put(edge, edgeCells);
                     }
                     cell.addEdge(edge);
@@ -135,8 +139,8 @@ public class Board {
     /* Count all possible moves in a board state */
     private int countPossibleMoves() {
         int possibleMoves = 0;
-        for (Entry<Edge, ArrayList<Cell>> entry: EdgeToCells.entrySet()) {
-            Edge edge = entry.getKey();
+        System.out.println("HashMap size:" + EdgeToCells.size());
+        for (Edge edge: EdgeToCells.keySet()) {
             if (!edge.getHasBeenCaptured()) {
                 possibleMoves++;
             }
