@@ -6,7 +6,7 @@ public class Board {
     private char[][] boardState;
     private int possibleMoves;
     private ArrayList<Cell> cells;
-    private HashMap<Edge, ArrayList<Cell>> EdgeToCells;
+    private HashMap<Edge, ArrayList<Cell>> EdgeToCells = new HashMap<Edge, ArrayList<Cell>>();
 
     public Board(int boardSize, char[][] boardState) {
         this.boardSize = boardSize;
@@ -63,6 +63,7 @@ public class Board {
                         EdgeToCells.put(edge, cell);
                     }
                     else {
+                        // Create new key, values
                         ArrayList<Cell> edgeCells = new ArrayList<Cell>();
                         edgeCells.add(cell);
                         EdgeToCells.put(edge, cell);
