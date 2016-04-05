@@ -15,7 +15,7 @@ public class GameTest {
             for (int row=0; row < entries; row++) {
                 col = 0;
                 String tempStr = input.nextLine();
-                System.out.println(tempStr);
+                // System.out.println(tempStr);
                 Scanner innerInput = new Scanner(tempStr);
                 String validStr = innerInput.next("[RB+-]");
                 while (validStr != null) {
@@ -30,13 +30,12 @@ public class GameTest {
                 }
                 innerInput.close();
             }
-            
             input.close();
+
             Board gameBoard = new Board(boardSize, boardState);
             System.out.println(gameBoard.getPossibleMoves());
             System.out.println(gameBoard.maxCellAvailableCapture());
             System.out.println(gameBoard.maxCellCaptureByOneMove());
-
         }
         catch (IllegalStateException e) {
             System.out.println(e);
@@ -44,8 +43,9 @@ public class GameTest {
         }
         catch (Exception e) {
             // Temporary handle errors
-            System.out.println("Invalid input. One of the following may have occured:");
-            System.out.println("Input chars that are not R B + or -");
+            // System.out.println("Invalid input. One of the following may have occured:");
+            // System.out.println("Input chars that are not R B + or -");
+            e.printStackTrace();
             System.exit(0);
         }
     }

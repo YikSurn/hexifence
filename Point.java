@@ -1,7 +1,7 @@
 public class Point {
 
-    private static int x;
-    private static int y;
+    private int x;
+    private int y;
 
     public Point(int x, int y) {
         this.x = x;
