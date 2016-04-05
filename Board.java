@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Board {
 
@@ -60,13 +61,13 @@ public class Board {
                         // Append to dictionary's values
                         ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
                         edgeCells.add(cell);
-                        EdgeToCells.put(edge, cell);
+                        EdgeToCells.put(edge, edgeCells);
                     }
                     else {
                         // Create new key, values
                         ArrayList<Cell> edgeCells = new ArrayList<Cell>();
                         edgeCells.add(cell);
-                        EdgeToCells.put(edge, cell);
+                        EdgeToCells.put(edge, edgeCells);
                     }
                     cell.addEdge(edge);
                 }
@@ -129,7 +130,7 @@ public class Board {
         return counter;
     }
 
-    public int maxCellCaptureByOneMove() {
-
-    }
+    // public int maxCellCaptureByOneMove() {
+        
+    // }
 }

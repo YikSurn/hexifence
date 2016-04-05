@@ -35,7 +35,7 @@ public class GameTest {
             Board gameBoard = new Board(boardSize, boardState);
             System.out.println(gameBoard.getPossibleMoves());
             System.out.println(gameBoard.maxCellAvailableCapture());
-            System.out.println(gameBoard.maxCellCaptureByOneMove());
+            // System.out.println(gameBoard.maxCellCaptureByOneMove());
         }
         catch (IllegalStateException e) {
             System.out.println(e);

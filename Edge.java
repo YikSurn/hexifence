@@ -12,4 +12,8 @@ public class Edge {
         this.pointOnBoard = p;
     }
 
+    public boolean getHasBeenCaptured() {
+        return hasBeenCaptured;
+    }
+
 }
