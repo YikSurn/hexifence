@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map.Entry;
 
 public class Board {
 
@@ -13,6 +14,7 @@ public class Board {
         this.boardSize = boardSize;
         this.boardState = boardState;
         this.storeState();
+        possibleMoves = countPossibleMoves();
     }
 
     private void storeState() {
@@ -130,7 +132,19 @@ public class Board {
         return counter;
     }
 
+    /* Count all possible moves in a board state */
+    private int countPossibleMoves() {
+        int possibleMoves = 0;
+        for (Entry<Edge, ArrayList<Cell>> entry: EdgeToCells.entrySet()) {
+            Edge edge = entry.getKey();
+            if (!edge.getHasBeenCaptured()) {
+                possibleMoves++;
+            }
+        }
+        return possibleMoves;
+    }
+
     // public int maxCellCaptureByOneMove() {
-        
+
     // }
 }
