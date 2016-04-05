@@ -6,7 +6,7 @@ public class Cell {
     private static int layerNum;
     private Point pointOnBoard;
     private Point actualPoint;
-    private ArrayList<Edge> edges;
+    private ArrayList<Edge> edges = new ArrayList<Edge>();
     // private HashMap<Edge, Cell> = new HashMap<Edge, Cell>();
 
     public Cell(Point pointOnBoard, Point actualPoint) {
@@ -16,6 +16,10 @@ public class Cell {
 
     public int getNumSidesCaptured() {
         return this.numSidesCaptured;
+    }
+
+    public void addEdge(Edge e) {
+        this.edges.add(e);
     }
 
     /* Returns a list of actual points of this cell's adjacent cells

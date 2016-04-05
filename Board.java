@@ -10,6 +10,55 @@ public class Board {
     public Board(int boardSize, char[][] boardState) {
         this.boardSize = boardSize;
         this.boardState = boardState;
+        this.storeState();
+    }
+
+    private void storeState() {
+        int entries = this.boardSize*4 - 1;
+
+        // Retrieve the cells
+        ArrayList<Point> cellActualPoints = new ArrayList<Point>();
+        ArrayList<Point> cellPoints = new ArrayList<Point>();
+        int countY;
+        int countX = 0;
+        Point p;
+        for (int i = 1; i < entries; i += 2) {
+            countY = 0;
+            int leftIndent = Math.max(0, i - entries/2);
+            int rightIndent = Math.max(0, entries/2 - i);
+            for (int j = 1 + leftIndent; j < entries - rightIndent; j += 2) {
+                cellPoints.add(new Point(i, j));
+                cellActualPoints.add(new Point(countX, countY));
+                countY++;
+            }
+            countX++;
+        }
+
+        // Loop through cell points, instantiate cells and add their edges to the cells
+        for (int i = 0; i < cellPoints.size(); i++) {
+            Cell cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
+            int cellX = cellPoints.get(i).getX();
+            int cellY = cellPoints.get(i).getY();
+
+            if (this.boardState[cellX][cellY] != '-') {
+                System.out.format("Error. The coordinate (%d, %d) should be a '-' to denote the location of a cell\n", cellX, cellY);
+            }
+
+            ArrayList<Point> edgesPoints = getPointOfEdges(cell);
+            for (Point edgeP: edgesPoints) {
+                int pointX = edgeP.getX();
+                int pointY = edgeP.getY();
+
+                char value = this.boardState[pointX][pointY];
+
+                if (value == '-') {
+                    System.out.format("Error. The coordinate (%d, %d) should be a valid edge value: B, R or +\n", pointX, pointY);
+                } else {
+                    Edge edge = new Edge(new Point(pointX, pointY), value);
+                    cell.addEdge(edge);
+                }
+            }
+        }
     }
 
     public int getPossibleMoves() {
