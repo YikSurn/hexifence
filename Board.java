@@ -14,7 +14,7 @@ public class Board {
         this.boardSize = boardSize;
         this.boardState = boardState;
         this.storeState();
-        possibleMoves = countPossibleMoves();
+        this.possibleMoves = countPossibleMoves();
     }
 
     private void storeState() {
@@ -79,7 +79,7 @@ public class Board {
     }
 
     public int getPossibleMoves() {
-        return possibleMoves;
+        return this.possibleMoves;
     }
 
     /* Returns the points of the edges of a cell
