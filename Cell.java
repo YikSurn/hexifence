@@ -1,3 +1,8 @@
+/* Authors:
+ * Yik Surn Chong (yikc)
+ * Angeline Lim (angelinel)
+ */
+
 import java.util.ArrayList;
 
 public class Cell {
@@ -78,7 +83,7 @@ public class Cell {
     /* Return true if this cell can be captured by one move, false otherwise
     */
     public boolean canCaptureByOneMove() {
-        return (numSidesCaptured == 5);
+        return (numSidesCaptured == Cell.MAX_EDGES - 1);
     }
 
     public Point getPointOnBoard() {

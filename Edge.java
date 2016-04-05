@@ -1,3 +1,8 @@
+/* Authors:
+ * Yik Surn Chong (yikc)
+ * Angeline Lim (angelinel)
+ */
+
 public class Edge {
 
     private boolean hasBeenCaptured;

@@ -1,3 +1,8 @@
+/* Authors:
+ * Yik Surn Chong (yikc)
+ * Angeline Lim (angelinel)
+ */
+
 import java.util.Scanner;
 
 public class GameTest {
@@ -34,16 +39,13 @@ public class GameTest {
             Board gameBoard = new Board(boardSize, boardState);
             System.out.println(gameBoard.getPossibleMoves());
             System.out.println(gameBoard.maxCellCaptureByOneMove());
-            System.out.println(gameBoard.maxCellAvailableCapture());
+            System.out.println(gameBoard.numCellsAvailableForCapture());
         }
         catch (IllegalStateException e) {
             System.out.println(e);
             System.exit(0);
         }
         catch (Exception e) {
-            // Temporary handle errors
-            // System.out.println("Invalid input. One of the following may have occured:");
-            // System.out.println("Input chars that are not R B + or -");
             e.printStackTrace();
             System.exit(0);
         }

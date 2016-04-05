@@ -1,6 +1,10 @@
+/* Authors:
+ * Yik Surn Chong (yikc)
+ * Angeline Lim (angelinel)
+ */
+
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 public class Board {
 
@@ -39,7 +43,7 @@ public class Board {
         }
 
         // Loop through cell points, instantiate cells and add their edges to the cells
-        ArrayList<Point> edgePoints = new ArrayList<Point>(); // store points of edges 
+        ArrayList<Point> edgePoints = new ArrayList<Point>(); // store points of edges
         for (int i = 0; i < cellPoints.size(); i++) {
             Cell cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
             int cellX = cellPoints.get(i).getX();
@@ -105,7 +109,7 @@ public class Board {
         return edgesPoints;
     }
 
-    /* Return the coordinates of the common edge between two cells
+    /* Return the points of the common edge between two cells
     */
     private Point getCommonEdgePoint(Cell c1, Cell c2) {
         Point c1Point = c1.getPointOnBoard();
@@ -115,7 +119,7 @@ public class Board {
         int c2X = c2Point.getX();
         int c2Y = c2Point.getY();
 
-        // The common edge between two cells would have coordinates
+        // The common edge between two cells would have points
         // that are directly in the middle of the two cells
         int commonEdgePointX = (c1X + c2X)/2;
         int commonEdgePointY = (c1Y + c2Y)/2;
@@ -124,9 +128,9 @@ public class Board {
         return commonEdgePoint;
     }
 
-    /* Return max cell available for captured
-    */
-    public int maxCellAvailableCapture() {
+    /* Return total number of cells available for capture
+     */
+    public int numCellsAvailableForCapture() {
         int counter = 0;
         for(Cell hex: this.cells) {
             if (hex.canCaptureByOneMove()) {
@@ -147,11 +151,13 @@ public class Board {
         return possibleMoves;
     }
 
+    /* Returns maximum number of cells that can be captured with one move
+     */
     public int maxCellCaptureByOneMove() {
         boolean atLeastOneCellCapturable = false;
 
         for (Cell c: this.cells) {
-            if (c.getNumSidesCaptured() == Cell.MAX_EDGES - 1) {
+            if (c.canCaptureByOneMove()) {
                 // Check if the uncaptured edge is the common edge to another capturable cell
                 Edge uncapturedEdge = c.getUncapturedEdges().get(0);
                 ArrayList<Cell> cells = this.EdgeToCells.get(uncapturedEdge);
@@ -160,7 +166,7 @@ public class Board {
                     for (Cell adjacentCell: cells) {
                         // Check if the adjacent cell can be captured in one move
                         // If yes, max cells that can be captured is these two cells
-                        if (adjacentCell != c && (adjacentCell.getNumSidesCaptured() == Cell.MAX_EDGES - 1)) {
+                        if (adjacentCell != c && adjacentCell.canCaptureByOneMove()) {
                             return 2;
                         }
                     }
@@ -175,15 +181,5 @@ public class Board {
         } else {
             return 0;
         }
-    }
-
-    public int numCellsForCapture() {
-        int count = 0;
-        for (Cell c: this.cells) {
-            if (c.getNumSidesCaptured() == Cell.MAX_EDGES - 1) {
-                count++;
-            }
-        }
-        return count;
     }
 }
