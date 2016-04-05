@@ -15,7 +15,6 @@ public class GameTest {
             for (int row=0; row < entries; row++) {
                 col = 0;
                 String tempStr = input.nextLine();
-                // System.out.println(tempStr);
                 Scanner innerInput = new Scanner(tempStr);
                 String validStr = innerInput.next("[RB+-]");
                 while (validStr != null) {
@@ -34,8 +33,8 @@ public class GameTest {
 
             Board gameBoard = new Board(boardSize, boardState);
             System.out.println(gameBoard.getPossibleMoves());
+            System.out.println(gameBoard.maxCellCaptureByOneMove());
             System.out.println(gameBoard.maxCellAvailableCapture());
-            // System.out.println(gameBoard.maxCellCaptureByOneMove());
         }
         catch (IllegalStateException e) {
             System.out.println(e);

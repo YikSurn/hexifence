@@ -14,6 +14,7 @@ public class Cell {
     public Cell(Point pointOnBoard, Point actualPoint) {
         this.pointOnBoard = pointOnBoard;
         this.actualPoint = actualPoint;
+        this.numSidesCaptured = 0;
     }
 
     public int getNumSidesCaptured() {
@@ -22,6 +23,9 @@ public class Cell {
 
     public void addEdge(Edge e) {
         this.edges.add(e);
+        if (e.getHasBeenCaptured()) {
+            this.numSidesCaptured++;
+        }
     }
 
     /* Returns a list of actual points of this cell's adjacent cells

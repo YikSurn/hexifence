@@ -139,7 +139,6 @@ public class Board {
     /* Count all possible moves in a board state */
     private int countPossibleMoves() {
         int possibleMoves = 0;
-        System.out.println("HashMap size:" + EdgeToCells.size());
         for (Edge edge: EdgeToCells.keySet()) {
             if (!edge.getHasBeenCaptured()) {
                 possibleMoves++;
