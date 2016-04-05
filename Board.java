@@ -6,6 +6,7 @@ public class Board {
     private char[][] boardState;
     private int possibleMoves;
     private ArrayList<Cell> cells;
+    private HashMap<Edge, ArrayList<Cell>> EdgeToCells;
 
     public Board(int boardSize, char[][] boardState) {
         this.boardSize = boardSize;
@@ -55,17 +56,26 @@ public class Board {
                     System.out.format("Error. The coordinate (%d, %d) should be a valid edge value: B, R or +\n", pointX, pointY);
                 } else {
                     Edge edge = new Edge(new Point(pointX, pointY), value);
+                    if (EdgeToCells.containsKey(edge)) {
+                        // Append to dictionary's values
+                        ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
+                        edgeCells.add(cell);
+                        EdgeToCells.put(edge, cell);
+                    }
+                    else {
+                        ArrayList<Cell> edgeCells = new ArrayList<Cell>();
+                        edgeCells.add(cell);
+                        EdgeToCells.put(edge, cell);
+                    }
                     cell.addEdge(edge);
                 }
             }
+            this.cells.add(cell);
         }
     }
 
     public int getPossibleMoves() {
         return possibleMoves;
-    }
-
-    public initBoard() {
     }
 
     /* Returns the points of the edges of a cell
