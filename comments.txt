@@ -1,7 +1,12 @@
 HexiFence
 
-The implementation of HexiFence is split by breaking down the game into components such as board, cell, edge and point. The main logic of the simulation is implemented under GameTest.java file, where the inputs are read and saved into our designated board state, which is a simple two-dimensional array.
-
+The implementation of HexiFence is split by breaking down the game into classes: Board, Cell, Edge and Point. The main logic of the simulation is implemented under GameTest.java file, where the inputs are read and saved into our designated board state, which is a simple two-dimensional array.
 
 Time complexity: O(n)
 
+
+
+
+describe the structure of the code you
+have implemented. This should include a pseudocode summary of your algorithm
+and a discussion of its time complexity
