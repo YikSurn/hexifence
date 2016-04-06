@@ -12,8 +12,8 @@ public class GameTest {
         int entries; // store max board state entries per row or col
         try {
             Scanner input = new Scanner(System.in);
-            int boardSize = input.nextInt();
-            entries = 4*boardSize - 1;
+            int boardDimension = input.nextInt();
+            entries = 4*boardDimension - 1;
             boardState = new char[entries][entries];
             input.nextLine(); // consume <enter> from prev int input
             int col;
@@ -36,7 +36,7 @@ public class GameTest {
             }
             input.close();
 
-            Board gameBoard = new Board(boardSize, boardState);
+            Board gameBoard = new Board(boardDimension, boardState);
             System.out.println(gameBoard.getPossibleMoves());
             System.out.println(gameBoard.maxCellCaptureByOneMove());
             System.out.println(gameBoard.numCellsAvailableForCapture());

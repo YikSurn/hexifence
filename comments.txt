@@ -1,12 +1,98 @@
-HexiFence
+# HexiFence
 
-The implementation of HexiFence is split by breaking down the game into classes: Board, Cell, Edge and Point. The main logic of the simulation is implemented under GameTest.java file, where the inputs are read and saved into our designated board state, which is a simple two-dimensional array.
+## Authors
 
-Time complexity: O(n)
+* Yik Surn Chong (yikc)
+* Angeline Lim (angelinel)
 
+## Code structure
 
+The implementation of HexiFence is split by breaking down the game into classes: Board, Cell, Edge and Point. The main logic of the simulation is implemented under GameTest.java file, where the inputs are read and saved into our designated board state, which is a simple two-dimensional array. Data in the array is then extracted to be stored as classes of Cells, Edges and Points.
 
+## Pseudocode summary of algorithm
 
-describe the structure of the code you
-have implemented. This should include a pseudocode summary of your algorithm
-and a discussion of its time complexity
+    storeState() {
+        for (i = 1; i < entries; i += 2) {
+            leftIndent = max(0, i - entries/2)
+            rightIndent = max(0, entries/2 - i)
+            for (j = 1 + leftIndent; j < entries - rightIndent; j += 2) {
+                cellPoints.add Point(i, j)
+            }
+        }
+
+        for each cell in cellPoint {
+            create cell object
+            for each edge in cell.getEdges() {
+                if pointsOfEdges does not contain edge {
+                    create array of size two to contain pair of adjacent cells
+                    add cell to this array
+                    pointsOfEdges.add edge
+                    map the edge to the array and add it to a hashmap of (Edge, Cell[])
+                } else {
+                    add cell to existing array of adjacent cells
+                    update the key-value pair in the hashmap
+                }
+                add edge to cell
+            }
+            add cell to list of cells
+        }
+    }
+
+    countPossibleMoves() {
+        for edge in key of hashmap {
+            count = 0
+            if edge has not been captured {
+                count++
+            }
+            return count
+        }
+    }
+
+    maxCellCaptureByOneMove() {
+        atLeastOneCellCapturable = false;
+
+        for (Cell c in cells) {
+            if (c.canCaptureByOneMove()) {
+                uncapturedEdge = c.getUncapturedEdge();
+                cells = get value of uncapturedEdge from hashmap;
+                if (cells.size() == 2) {
+                    retrieve the adjacentCell
+                        if (adjacentCell.canCaptureByOneMove()) {
+                            return 2;
+                        }
+                    }
+                } else if (!atLeastOneCellCapturable) {
+                    atLeastOneCellCapturable = true;
+                }
+            }
+        }
+
+        if (atLeastOneCellCapturable) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    numCellsAvailableForCapture() {
+        counter = 0;
+        for (Cell hex in cells) {
+            if (hex.canCaptureByOneMove()) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
+## Time complexity
+
+* N : board dimension
+* c : number of cells
+* n : number of edges
+
+1. storeState() : O(c) + O(c*6) = O(c)
+2. countPossibleMoves() : O(n)
+3. maxCellCaptureByOneMove() : O(c)
+4. numCellsAvailableForCapture() : O(c)
+
+**Total time complexity : 3(O(c)) + O(n) = O(n)**

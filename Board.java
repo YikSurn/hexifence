@@ -8,21 +8,69 @@ import java.util.HashMap;
 
 public class Board {
 
-    private static int boardSize;
+    private static int boardDimension;
     private char[][] boardState;
     private int possibleMoves;
     private ArrayList<Cell> cells = new ArrayList<Cell>();
     private HashMap<Edge, ArrayList<Cell>> EdgeToCells = new HashMap<Edge, ArrayList<Cell>>();
 
-    public Board(int boardSize, char[][] boardState) {
-        this.boardSize = boardSize;
+    public Board(int boardDimension, char[][] boardState) {
+        this.boardDimension = boardDimension;
         this.boardState = boardState;
         this.storeState();
         this.possibleMoves = countPossibleMoves();
     }
 
+    public int getPossibleMoves() {
+        return this.possibleMoves;
+    }
+
+    /* Returns maximum number of cells that can be captured with one move
+     */
+    public int maxCellCaptureByOneMove() {
+        boolean atLeastOneCellCapturable = false;
+
+        for (Cell c: this.cells) {
+            if (c.canCaptureByOneMove()) {
+                // Check if the uncaptured edge is the common edge to another capturable cell
+                Edge uncapturedEdge = c.getUncapturedEdges().get(0);
+                ArrayList<Cell> cells = this.EdgeToCells.get(uncapturedEdge);
+                // Check if uncaptured edge has an adjacent cell
+                if (cells.size() == 2) {
+                    for (Cell adjacentCell: cells) {
+                        // Check if the adjacent cell can be captured in one move
+                        // If yes, max cells that can be captured is these two cells
+                        if (adjacentCell != c && adjacentCell.canCaptureByOneMove()) {
+                            return 2;
+                        }
+                    }
+                } else if (!atLeastOneCellCapturable) {
+                    atLeastOneCellCapturable = true;
+                }
+            }
+        }
+
+        if (atLeastOneCellCapturable) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    /* Return total number of cells available for capture
+     */
+    public int numCellsAvailableForCapture() {
+        int counter = 0;
+        for (Cell hex: this.cells) {
+            if (hex.canCaptureByOneMove()) {
+                counter++;
+            }
+        }
+        return counter;
+    }
+
     private void storeState() {
-        int entries = this.boardSize*4 - 1;
+        int entries = this.boardDimension*4 - 1;
 
         // Retrieve the cells
         ArrayList<Point> cellActualPoints = new ArrayList<Point>();
@@ -66,17 +114,17 @@ public class Board {
                     System.exit(0);
                 } else {
                     Edge edge = new Edge(new Point(pointX, pointY), value);
-                    if (edgePoints.contains(edge.getPointOnBoard())) {
-                        // Append to dictionary's values
-                        ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
+                    if (!edgePoints.contains(edge.getPointOnBoard())) {
+                        // Create new key, values
+                        ArrayList<Cell> edgeCells = new ArrayList<Cell>(2);
                         edgeCells.add(cell);
+                        edgePoints.add(edge.getPointOnBoard());
                         EdgeToCells.put(edge, edgeCells);
                     }
                     else {
-                        // Create new key, values
-                        ArrayList<Cell> edgeCells = new ArrayList<Cell>();
+                        // Append to dictionary's values
+                        ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
                         edgeCells.add(cell);
-                        edgePoints.add(edge.getPointOnBoard());
                         EdgeToCells.put(edge, edgeCells);
                     }
                     cell.addEdge(edge);
@@ -84,10 +132,6 @@ public class Board {
             }
             this.cells.add(cell);
         }
-    }
-
-    public int getPossibleMoves() {
-        return this.possibleMoves;
     }
 
     /* Returns the points of the edges of a cell
@@ -128,18 +172,6 @@ public class Board {
         return commonEdgePoint;
     }
 
-    /* Return total number of cells available for capture
-     */
-    public int numCellsAvailableForCapture() {
-        int counter = 0;
-        for(Cell hex: this.cells) {
-            if (hex.canCaptureByOneMove()) {
-                counter++;
-            }
-        }
-        return counter;
-    }
-
     /* Count all possible moves in a board state */
     private int countPossibleMoves() {
         int possibleMoves = 0;
@@ -149,37 +181,5 @@ public class Board {
             }
         }
         return possibleMoves;
-    }
-
-    /* Returns maximum number of cells that can be captured with one move
-     */
-    public int maxCellCaptureByOneMove() {
-        boolean atLeastOneCellCapturable = false;
-
-        for (Cell c: this.cells) {
-            if (c.canCaptureByOneMove()) {
-                // Check if the uncaptured edge is the common edge to another capturable cell
-                Edge uncapturedEdge = c.getUncapturedEdges().get(0);
-                ArrayList<Cell> cells = this.EdgeToCells.get(uncapturedEdge);
-                // Check if uncaptured edge has an adjacent cell
-                if (cells.size() == 2) {
-                    for (Cell adjacentCell: cells) {
-                        // Check if the adjacent cell can be captured in one move
-                        // If yes, max cells that can be captured is these two cells
-                        if (adjacentCell != c && adjacentCell.canCaptureByOneMove()) {
-                            return 2;
-                        }
-                    }
-                } else if (!atLeastOneCellCapturable) {
-                    atLeastOneCellCapturable = true;
-                }
-            }
-        }
-
-        if (atLeastOneCellCapturable) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 }
