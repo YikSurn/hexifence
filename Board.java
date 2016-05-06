@@ -71,6 +71,17 @@ public class Board {
         }
         return counter;
     }
+    
+    public Edge getEdgeOfBoard(Point point) {
+    	
+    }
+    
+    /* Loop through the board, and get the point
+     * 
+     * */
+    public int checkPoint(Point point) {
+    	
+    }
 
     private void storeState() {
         int entries = this.boardDimension*4 - 1;
