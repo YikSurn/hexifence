@@ -10,7 +10,6 @@ public class Cell {
     public static final int MAX_EDGES = 6;
 
     private int numSidesCaptured;
-    private int layerNum;
     private Point pointOnBoard;
     private Point actualPoint;
     private ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -40,7 +39,6 @@ public class Cell {
         int max = 2*boardSize - 2; // maximum x or y point
         int x = actualPoint.getX();
         int y = actualPoint.getY();
-        boolean checkPoint = false;
         if (x-1 >= 0) {
             cellPoints.add(new Point(x-1, y));
         }

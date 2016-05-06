@@ -10,7 +10,7 @@ public class Edge {
     private Point pointOnBoard;
 
     public Edge(Point p, char capturedBy) {
-        this.capturedBy = capturedBy;
+        this.setCapturedBy(capturedBy);
         if (capturedBy == 'R' || capturedBy == 'B') {
             this.hasBeenCaptured = true;
         }
@@ -44,4 +44,12 @@ public class Edge {
     public int hashCode() {
         return 0;
     }
+
+	public char getCapturedBy() {
+		return capturedBy;
+	}
+
+	public void setCapturedBy(char capturedBy) {
+		this.capturedBy = capturedBy;
+	}
 }

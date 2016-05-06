@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Board {
 
-    private static int boardDimension;
+    private int boardDimension;
     private char[][] boardState;
     private int possibleMoves;
     private ArrayList<Cell> cells = new ArrayList<Cell>();
@@ -80,7 +80,6 @@ public class Board {
         ArrayList<Point> cellPoints = new ArrayList<Point>();
         int countY;
         int countX = 0;
-        Point p;
         for (int i = 1; i < entries; i += 2) {
             countY = 0;
             int leftIndent = Math.max(0, i - entries/2);
