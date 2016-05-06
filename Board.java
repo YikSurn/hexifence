@@ -19,6 +19,10 @@ public class Board {
         this.possibleMoves = countPossibleMoves();
     }
 
+    public int getBoardDimension() {
+        return this.boardDimension;
+    }
+
     public int getPossibleMoves() {
         return this.possibleMoves;
     }
