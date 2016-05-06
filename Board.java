@@ -44,7 +44,10 @@ public class Board {
                             return 2;
                         }
                     }
-                } else if (!atLeastOneCellCapturable) {
+                }
+
+                // The current edge can only capture one cell
+                if (!atLeastOneCellCapturable) {
                     atLeastOneCellCapturable = true;
                 }
             }
