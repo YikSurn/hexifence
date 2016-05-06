@@ -1,18 +1,31 @@
 import aiproj.hexifence.*;
 
 import java.io.PrintStream;
+import java.util.Random;
 
 /*
  *  Random player
  */
-public class RandomPlayer implements Player {
+public class RandomPlayer implements Player, Piece {
+
+    private Board board;
+    private int player;
+    private int boardSize;
 
     /* This funstion is called by the referee to initialise the player.
      *  Return 0 for successful initialization and -1 for failed one.
      */
     @Override
     public int init(int n, int p) {
+        if (p != BLUE && p != RED) {
+            return -1;
+        }
 
+        this.player = p;
+        this.boardSize = n;
+        this.board = new Board(n);
+
+        return 0;
     }
 
     /* Function called by referee to request a move by the player.
@@ -20,7 +33,24 @@ public class RandomPlayer implements Player {
      */
     @Override
     public Move makeMove() {
+        Random random = new Random();
+        int max = this.board.getBoardDimension()*4 - 1;
+        int row = random.nextInt(max);
+        int col = random.nextInt(max);
+        Point point = new Point(row, col);
 
+        while (!this.validMove(point)) {
+            row = random.nextInt(max);
+            col = random.nextInt(max);
+            point.setPoint(row, col);
+        }
+
+        Move m = new Move();
+        m.P = this.player;
+        m.Row = row;
+        m.Col = col;
+
+        return m;
     }
 
     /* Function called by referee to inform the player about the opponent's move
@@ -30,7 +60,24 @@ public class RandomPlayer implements Player {
      */
     @Override
     public int opponentMove(Move m) {
+        Point point = new Point(m.Row, m.Col);
 
+        // Check for invalidity
+        if (m.P == this.player) {
+            // Check if opponent incorrectly labelled the move as player's own move
+            return -1;
+        } else if (!this.validMove(point)) {
+            return -1;
+        }
+
+        // Opponent's move is valid
+        this.recordMove(point);
+        if (this.isCapturingMove(point)) {
+            return 1;
+        } else {
+            // No cell has been captured
+            return 0;
+        }
     }
 
     /* This function when called by referee should return the winner
@@ -38,7 +85,8 @@ public class RandomPlayer implements Player {
      */
     @Override
     public int getWinner() {
-
+        // Return empty for now
+        return 0;
     }
 
     /* Function called by referee to get the board configuration in String format
@@ -48,4 +96,17 @@ public class RandomPlayer implements Player {
     public void printBoard(PrintStream output) {
 
     }
+
+    private boolean validMove(Point point) {
+        return true;
+    }
+
+    private boolean isCapturingMove(Point point) {
+        return false;
+    }
+
+    private void recordMove(Point point) {
+
+    }
+
 }

@@ -9,16 +9,18 @@ import java.util.HashMap;
 public class Board {
 
     private int boardDimension;
-    private char[][] boardState;
     private int possibleMoves;
     private ArrayList<Cell> cells = new ArrayList<Cell>();
     private HashMap<Edge, ArrayList<Cell>> EdgeToCells = new HashMap<Edge, ArrayList<Cell>>();
 
-    public Board(int boardDimension, char[][] boardState) {
+    public Board(int boardDimension) {
         this.boardDimension = boardDimension;
-        this.boardState = boardState;
-        this.storeState();
+        this.cleanState();
         this.possibleMoves = countPossibleMoves();
+    }
+
+    public int getBoardDimension() {
+        return this.boardDimension;
     }
 
     public int getPossibleMoves() {
@@ -83,7 +85,7 @@ public class Board {
     	
     }
 
-    private void storeState() {
+    private void cleanState() {
         int entries = this.boardDimension*4 - 1;
 
         // Retrieve the cells
@@ -103,6 +105,8 @@ public class Board {
             countX++;
         }
 
+        char EMPTY_EDGE = '+';
+
         // Loop through cell points, instantiate cells and add their edges to the cells
         ArrayList<Point> edgePoints = new ArrayList<Point>(); // store points of edges
         for (int i = 0; i < cellPoints.size(); i++) {
@@ -110,38 +114,26 @@ public class Board {
             int cellX = cellPoints.get(i).getX();
             int cellY = cellPoints.get(i).getY();
 
-            if (this.boardState[cellX][cellY] != '-') {
-                System.out.format("Error. The coordinate (%d, %d) should be a '-' to denote the location of a cell\n", cellX, cellY);
-                System.exit(0);
-            }
-
             ArrayList<Point> edgesPoints = getPointOfEdges(cell);
             for (Point edgeP: edgesPoints) {
                 int pointX = edgeP.getX();
                 int pointY = edgeP.getY();
 
-                char value = this.boardState[pointX][pointY];
-
-                if (value == '-') {
-                    System.out.format("Error. The coordinate (%d, %d) should be a valid edge value: B, R or +\n", pointX, pointY);
-                    System.exit(0);
-                } else {
-                    Edge edge = new Edge(new Point(pointX, pointY), value);
-                    if (!edgePoints.contains(edge.getPointOnBoard())) {
-                        // Create new key, values
-                        ArrayList<Cell> edgeCells = new ArrayList<Cell>(2);
-                        edgeCells.add(cell);
-                        edgePoints.add(edge.getPointOnBoard());
-                        EdgeToCells.put(edge, edgeCells);
-                    }
-                    else {
-                        // Append to dictionary's values
-                        ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
-                        edgeCells.add(cell);
-                        EdgeToCells.put(edge, edgeCells);
-                    }
-                    cell.addEdge(edge);
+                Edge edge = new Edge(new Point(pointX, pointY), EMPTY_EDGE);
+                if (!edgePoints.contains(edge.getPointOnBoard())) {
+                    // Create new key, values
+                    ArrayList<Cell> edgeCells = new ArrayList<Cell>(2);
+                    edgeCells.add(cell);
+                    edgePoints.add(edge.getPointOnBoard());
+                    EdgeToCells.put(edge, edgeCells);
                 }
+                else {
+                    // Append to dictionary's values
+                    ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
+                    edgeCells.add(cell);
+                    EdgeToCells.put(edge, edgeCells);
+                }
+                cell.addEdge(edge);
             }
             this.cells.add(cell);
         }
