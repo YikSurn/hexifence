@@ -1,3 +1,8 @@
+/* Authors:
+ * Yik Surn Chong (yikc)
+ * Angeline Lim (angelinel)
+ */
+
 import java.util.Scanner;
 
 public class GameTest {
@@ -7,8 +12,8 @@ public class GameTest {
         int entries; // store max board state entries per row or col
         try {
             Scanner input = new Scanner(System.in);
-            int boardSize = input.nextInt();
-            entries = 4*boardSize - 1;
+            int boardDimension = input.nextInt();
+            entries = 4*boardDimension - 1;
             boardState = new char[entries][entries];
             input.nextLine(); // consume <enter> from prev int input
             int col;
@@ -31,19 +36,16 @@ public class GameTest {
             }
             input.close();
 
-            Board gameBoard = new Board(boardSize, boardState);
+            Board gameBoard = new Board(boardDimension, boardState);
             System.out.println(gameBoard.getPossibleMoves());
             System.out.println(gameBoard.maxCellCaptureByOneMove());
-            System.out.println(gameBoard.maxCellAvailableCapture());
+            System.out.println(gameBoard.numCellsAvailableForCapture());
         }
         catch (IllegalStateException e) {
             System.out.println(e);
             System.exit(0);
         }
         catch (Exception e) {
-            // Temporary handle errors
-            // System.out.println("Invalid input. One of the following may have occured:");
-            // System.out.println("Input chars that are not R B + or -");
             e.printStackTrace();
             System.exit(0);
         }
