@@ -9,6 +9,7 @@ public class Cell {
 
     public static final int MAX_EDGES = 6;
 
+    private int capturedBy;
     private int numSidesCaptured;
     private Point pointOnBoard;
     private Point actualPoint;
@@ -30,6 +31,14 @@ public class Cell {
         if (e.getHasBeenCaptured()) {
             this.numSidesCaptured++;
         }
+    }
+
+    public int getCapturedBy() {
+        return this.capturedBy;
+    }
+
+    public void setCapturedBy(int player) {
+        this.capturedBy = player;
     }
 
     /* Returns a list of actual points of this cell's adjacent cells

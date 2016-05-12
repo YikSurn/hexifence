@@ -3,11 +3,14 @@
  * Angeline Lim (angelinel)
  */
 
+import aiproj.hexifence.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Board {
+public class Board implements Piece {
 
+    private Point lastOpponentPoint;
     private int boardDimension;
     private int possibleMoves;
     private ArrayList<Cell> cells = new ArrayList<Cell>();
@@ -15,7 +18,7 @@ public class Board {
 
     public Board(int boardDimension) {
         this.boardDimension = boardDimension;
-        this.cleanState();
+        this.newState();
         this.possibleMoves = countPossibleMoves();
     }
 
@@ -74,7 +77,7 @@ public class Board {
         return counter;
     }
 
-    private void cleanState() {
+    private void newState() {
         int entries = this.boardDimension*4 - 1;
 
         // Retrieve the cells
@@ -109,11 +112,11 @@ public class Board {
                 int pointY = edgeP.getY();
 
                 Edge edge = new Edge(new Point(pointX, pointY), EMPTY_EDGE);
-                if (!edgePoints.contains(edge.getPointOnBoard())) {
+                if (!edgePoints.contains(edge.getPoint())) {
                     // Create new key, values
                     ArrayList<Cell> edgeCells = new ArrayList<Cell>(2);
                     edgeCells.add(cell);
-                    edgePoints.add(edge.getPointOnBoard());
+                    edgePoints.add(edge.getPoint());
                     EdgeToCells.put(edge, edgeCells);
                 }
                 else {
@@ -175,5 +178,73 @@ public class Board {
             }
         }
         return possibleMoves;
+    }
+
+    private Edge getEdge(Point p) {
+        for (Edge e: this.EdgeToCells.keySet()) {
+            if (e.getPoint().equals(p)) {
+                return e;
+            }
+        }
+
+        // No such point
+        return null;
+    }
+
+    public boolean validPoint(Point point) {
+        Edge edge = this.getEdge(point);
+
+        if (edge == null || edge.getHasBeenCaptured()) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public boolean isCapturingPoint(Point point) {
+        Edge edge = this.getEdge(point);
+        for (Cell c: this.EdgeToCells.get(edge)) {
+            if (c.canCaptureByOneMove()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public int getPlayerCells(int player) {
+        int count = 0;
+
+        for (Cell c: this.cells) {
+            if (c.getCapturedBy() == player) {
+                count++;
+            }
+        }
+
+        return count;
+    }
+
+    public int getWinner() {
+        if (this.getPossibleMoves() > 0) {
+            return EMPTY;
+        } else if (!this.validPoint(this.lastOpponentPoint)) {
+            return INVALID;
+        }
+
+        int redCells = this.getPlayerCells(BLUE);
+        int blueCells = this.getPlayerCells(RED);
+
+        if (redCells == blueCells) {
+            return DEAD;
+        } else if (redCells > blueCells) {
+            return RED;
+        } else {
+            return BLUE;
+        }
+    }
+
+    public void recordMove(Move m) {
+        Point point = new Point(m.Row, m.Col);
+        this.lastOpponentPoint = point;
     }
 }
