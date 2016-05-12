@@ -10,6 +10,13 @@ import java.util.HashMap;
 
 public class Board implements Piece {
 
+    private static final char NA_POINT = '-';
+    private static final char EMPTY_EDGE = '+';
+    private static final char RED_EDGE = 'R';
+    private static final char BLUE_EDGE = 'B';
+    private static final char RED_CELL = 'r';
+    private static final char BLUE_CELL = 'b';
+
     private Point lastOpponentPoint;
     private int boardDimension;
     private int possibleMoves;
@@ -254,6 +261,61 @@ public class Board implements Piece {
 
         for (Cell c: this.EdgeToCells.get(edge)) {
             c.edgeCapturedUpdate(m.P);
+        }
+    }
+
+    public void printBoard() {
+        char value;
+        Point p;
+        int x, y;
+        int boardSize = this.boardDimension*4 - 1;
+        char[][] board = new char[boardSize][boardSize];
+
+        for (Edge e: this.EdgeToCells.keySet()) {
+            if (e.getHasBeenCaptured()) {
+                if (e.getCapturedBy() == RED) {
+                    value = RED_EDGE;
+                } else {
+                    value = BLUE_EDGE;
+                }
+            } else {
+                value = EMPTY_EDGE;
+            }
+
+            p = e.getPoint();
+            x = p.getX();
+            y = p.getY();
+            board[x][y] = value;
+        }
+
+        for (Cell c: this.cells) {
+            if (c.isCaptured()) {
+                if (c.getCapturedBy() == RED) {
+                    value = RED_CELL;
+                } else {
+                    value = BLUE_CELL;
+                }
+
+                p = c.getPointOnBoard();
+                x = p.getX();
+                y = p.getY();
+                board[x][y] = value;
+            }
+        }
+
+        for (int i = 0; i < boardSize; i++) {
+            for (int j = 0; j < boardSize; j++) {
+                if (board[i][j] == 0) {
+                    board[i][j] = NA_POINT;
+                }
+            }
+        }
+
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                System.out.print(board[row][col]);
+            }
+            System.out.println();
         }
     }
 }

@@ -100,6 +100,6 @@ public class RandomPlayer implements Player, Piece {
      */
     @Override
     public void printBoard(PrintStream output) {
-
+        this.board.printBoard();
     }
 }
