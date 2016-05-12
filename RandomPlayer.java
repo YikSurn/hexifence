@@ -55,6 +55,7 @@ public class RandomPlayer implements Player, Piece {
         m.Row = row;
         m.Col = col;
 
+        this.board.update(m);
         return m;
     }
 
@@ -76,7 +77,8 @@ public class RandomPlayer implements Player, Piece {
         }
 
         // Opponent's move is valid
-        this.board.recordMove(m);
+        this.board.setLastOpponentPoint(point);
+        this.board.update(m);
         if (this.board.isCapturingPoint(point)) {
             return 1;
         } else {

@@ -19,7 +19,7 @@ public class Board implements Piece {
     public Board(int boardDimension) {
         this.boardDimension = boardDimension;
         this.newState();
-        this.possibleMoves = countPossibleMoves();
+        this.possibleMoves = this.countPossibleMoves();
     }
 
     public int getBoardDimension() {
@@ -97,8 +97,6 @@ public class Board implements Piece {
             countX++;
         }
 
-        char EMPTY_EDGE = '+';
-
         // Loop through cell points, instantiate cells and add their edges to the cells
         ArrayList<Point> edgePoints = new ArrayList<Point>(); // store points of edges
         for (int i = 0; i < cellPoints.size(); i++) {
@@ -111,7 +109,7 @@ public class Board implements Piece {
                 int pointX = edgeP.getX();
                 int pointY = edgeP.getY();
 
-                Edge edge = new Edge(new Point(pointX, pointY), EMPTY_EDGE);
+                Edge edge = new Edge(new Point(pointX, pointY));
                 if (!edgePoints.contains(edge.getPoint())) {
                     // Create new key, values
                     ArrayList<Cell> edgeCells = new ArrayList<Cell>(2);
@@ -243,8 +241,19 @@ public class Board implements Piece {
         }
     }
 
-    public void recordMove(Move m) {
-        Point point = new Point(m.Row, m.Col);
+    public void setLastOpponentPoint(Point point) {
         this.lastOpponentPoint = point;
+    }
+
+    public void update(Move m) {
+        Point point = new Point(m.Row, m.Col);
+
+        Edge edge = this.getEdge(point);
+        edge.setCapturedBy(m.P);
+        this.possibleMoves--;
+
+        for (Cell c: this.EdgeToCells.get(edge)) {
+            c.edgeCapturedUpdate(m.P);
+        }
     }
 }
