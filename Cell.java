@@ -9,7 +9,9 @@ public class Cell {
 
     public static final int MAX_EDGES = 6;
 
-    private int numSidesCaptured;
+    private int capturedBy;
+    private boolean captured;
+    private int numSidesUncaptured;
     private Point pointOnBoard;
     private Point actualPoint;
     private ArrayList<Edge> edges = new ArrayList<Edge>();
@@ -18,18 +20,32 @@ public class Cell {
     public Cell(Point pointOnBoard, Point actualPoint) {
         this.pointOnBoard = pointOnBoard;
         this.actualPoint = actualPoint;
-        this.numSidesCaptured = 0;
+        this.numSidesUncaptured = MAX_EDGES;
+        this.captured = false;
     }
 
-    public int getNumSidesCaptured() {
-        return this.numSidesCaptured;
+    public int getNumSidesUncaptured() {
+        return this.numSidesUncaptured;
+    }
+
+    public void edgeCapturedUpdate(int player) {
+        this.numSidesUncaptured = this.getUncapturedEdges().size();
+        if (this.numSidesUncaptured == 0) {
+            this.captured = true;
+            this.capturedBy = player;
+        }
     }
 
     public void addEdge(Edge e) {
         this.edges.add(e);
-        if (e.getHasBeenCaptured()) {
-            this.numSidesCaptured++;
-        }
+    }
+
+    public boolean isCaptured() {
+        return this.captured;
+    }
+
+    public int getCapturedBy() {
+        return this.capturedBy;
     }
 
     /* Returns a list of actual points of this cell's adjacent cells
@@ -81,7 +97,7 @@ public class Cell {
     /* Return true if this cell can be captured by one move, false otherwise
     */
     public boolean canCaptureByOneMove() {
-        return (numSidesCaptured == Cell.MAX_EDGES - 1);
+        return (this.numSidesUncaptured == 1);
     }
 
     public Point getPointOnBoard() {

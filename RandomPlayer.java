@@ -1,3 +1,8 @@
+/* Authors:
+ * Yik Surn Chong (yikc)
+ * Angeline Lim (angelinel)
+ */
+
 import aiproj.hexifence.*;
 
 import java.io.PrintStream;
@@ -18,7 +23,7 @@ public class RandomPlayer implements Player, Piece {
     @Override
     public int init(int n, int p) {
         if (p != BLUE && p != RED) {
-            return -1;
+            return INVALID;
         }
 
         this.player = p;
@@ -39,7 +44,7 @@ public class RandomPlayer implements Player, Piece {
         int col = random.nextInt(max);
         Point point = new Point(row, col);
 
-        while (!this.validMove(point)) {
+        while (!this.board.validPoint(point)) {
             row = random.nextInt(max);
             col = random.nextInt(max);
             point.setPoint(row, col);
@@ -50,6 +55,7 @@ public class RandomPlayer implements Player, Piece {
         m.Row = row;
         m.Col = col;
 
+        this.board.update(m);
         return m;
     }
 
@@ -65,14 +71,15 @@ public class RandomPlayer implements Player, Piece {
         // Check for invalidity
         if (m.P == this.player) {
             // Check if opponent incorrectly labelled the move as player's own move
-            return -1;
-        } else if (!this.validMove(point)) {
-            return -1;
+            return INVALID;
+        } else if (!this.board.validPoint(point)) {
+            return INVALID;
         }
 
         // Opponent's move is valid
-        this.recordMove(point);
-        if (this.isCapturingMove(point)) {
+        this.board.setLastOpponentPoint(point);
+        this.board.update(m);
+        if (this.board.isCapturingPoint(point)) {
             return 1;
         } else {
             // No cell has been captured
@@ -85,8 +92,7 @@ public class RandomPlayer implements Player, Piece {
      */
     @Override
     public int getWinner() {
-        // Return empty for now
-        return 0;
+        return this.board.getWinner();
     }
 
     /* Function called by referee to get the board configuration in String format
@@ -94,19 +100,6 @@ public class RandomPlayer implements Player, Piece {
      */
     @Override
     public void printBoard(PrintStream output) {
-
+        this.board.printBoard();
     }
-
-    private boolean validMove(Point point) {
-        return true;
-    }
-
-    private boolean isCapturingMove(Point point) {
-        return false;
-    }
-
-    private void recordMove(Point point) {
-
-    }
-
 }

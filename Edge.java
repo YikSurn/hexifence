@@ -6,23 +6,24 @@
 public class Edge {
 
     private boolean hasBeenCaptured;
-    private char capturedBy;
-    private Point pointOnBoard;
+    private int capturedBy;
+    private Point point;
 
-    public Edge(Point p, char capturedBy) {
-        this.setCapturedBy(capturedBy);
-        if (capturedBy == 'R' || capturedBy == 'B') {
-            this.hasBeenCaptured = true;
-        }
-        this.pointOnBoard = p;
+    public Edge(Point p) {
+        this.hasBeenCaptured = false;
+        this.point = p;
     }
 
     public boolean getHasBeenCaptured() {
-        return hasBeenCaptured;
+        return this.hasBeenCaptured;
     }
 
-    public Point getPointOnBoard() {
-        return pointOnBoard;
+    public Point getPoint() {
+        return this.point;
+    }
+
+    public void setCapturedBy(int player) {
+        this.capturedBy = player;
     }
 
     @Override
@@ -34,7 +35,7 @@ public class Edge {
         if (getClass() != obj.getClass())
             return false;
         Edge another = (Edge) obj;
-        if (another.getPointOnBoard().equals(pointOnBoard)) {
+        if (another.getPoint().equals(this.point)) {
             return true;
         }
         return false;
@@ -45,11 +46,8 @@ public class Edge {
         return 0;
     }
 
-	public char getCapturedBy() {
+	public int getCapturedBy() {
 		return capturedBy;
 	}
 
-	public void setCapturedBy(char capturedBy) {
-		this.capturedBy = capturedBy;
-	}
 }
