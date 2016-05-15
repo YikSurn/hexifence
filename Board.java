@@ -119,29 +119,39 @@ public class Board implements Piece {
         }
 
         // Loop through cell points, instantiate cells and add their edges to the cells
-        ArrayList<Point> edgePoints = new ArrayList<Point>(); // store points of edges
+        HashMap<Point, Edge> allEdgePoints = new HashMap<Point, Edge>(); // (points of edge: edge)
+        Edge edge;
+        ArrayList<Cell> edgeCells;
         for (int i = 0; i < cellPoints.size(); i++) {
             Cell cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
 
-            ArrayList<Point> edgesPoints = getPointOfEdges(cell);
-            for (Point edgeP: edgesPoints) {
-                int pointX = edgeP.getX();
-                int pointY = edgeP.getY();
+            ArrayList<Point> edgePointsOfCell = getPointOfEdges(cell);
+            for (Point edgeP: edgePointsOfCell) {
+                edge = null;
 
-                Edge edge = new Edge(new Point(pointX, pointY));
-                if (!edgePoints.contains(edge.getPoint())) {
-                    // Create new key, values
-                    ArrayList<Cell> edgeCells = new ArrayList<Cell>(2);
+                // find if the point has already been retrieved
+                for (Point point: allEdgePoints.keySet()) {
+                    if (point.equals(edgeP)) {
+                        edge = allEdgePoints.get(point);
+                    }
+                }
+
+                if (edge != null) {
+                    // edge already exist/created
+                    edgeCells = EdgeToCells.get(edge);
+
                     edgeCells.add(cell);
-                    edgePoints.add(edge.getPoint());
+                    EdgeToCells.put(edge, edgeCells);
+                } else {
+                    // create new edge
+                    edgeCells = new ArrayList<Cell>(2);
+                    edge = new Edge(edgeP);
+
+                    edgeCells.add(cell);
+                    allEdgePoints.put(edgeP, edge);
                     EdgeToCells.put(edge, edgeCells);
                 }
-                else {
-                    // Append to dictionary's values
-                    ArrayList<Cell> edgeCells = EdgeToCells.get(edge);
-                    edgeCells.add(cell);
-                    EdgeToCells.put(edge, edgeCells);
-                }
+
                 cell.addEdge(edge);
             }
             this.cells.add(cell);
@@ -155,16 +165,16 @@ public class Board implements Piece {
         int cellX = cellPoint.getX();
         int cellY = cellPoint.getY();
 
-        ArrayList<Point> edgesPoints = new ArrayList<Point>(6);
+        ArrayList<Point> edgePointsOfCell = new ArrayList<Point>(6);
 
-        edgesPoints.add(new Point(cellX - 1, cellY - 1));
-        edgesPoints.add(new Point(cellX - 1, cellY));
-        edgesPoints.add(new Point(cellX, cellY - 1));
-        edgesPoints.add(new Point(cellX, cellY + 1));
-        edgesPoints.add(new Point(cellX + 1, cellY));
-        edgesPoints.add(new Point(cellX + 1, cellY + 1));
+        edgePointsOfCell.add(new Point(cellX - 1, cellY - 1));
+        edgePointsOfCell.add(new Point(cellX - 1, cellY));
+        edgePointsOfCell.add(new Point(cellX, cellY - 1));
+        edgePointsOfCell.add(new Point(cellX, cellY + 1));
+        edgePointsOfCell.add(new Point(cellX + 1, cellY));
+        edgePointsOfCell.add(new Point(cellX + 1, cellY + 1));
 
-        return edgesPoints;
+        return edgePointsOfCell;
     }
 
     /* Return the points of the common edge between two cells
@@ -279,14 +289,8 @@ public class Board implements Piece {
         edge.setCapturedBy(m.P);
         this.possibleMoves--;
 
-        // Update the cell's edges where the captured edge belongs to 
+        // Update the cell's edges where the captured edge belongs to
         for (Cell c: this.EdgeToCells.get(edge)) {
-            for (Edge cellEdge: c.getEdges()) {
-            	if (cellEdge.getPoint().equals(point)) {
-                    cellEdge.setCapturedBy(m.P);
-            	}
-            }
-            // check if the cell is captured by a player
             c.edgeCapturedUpdate(m.P);
         }
     }
