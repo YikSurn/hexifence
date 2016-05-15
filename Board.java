@@ -193,7 +193,7 @@ public class Board implements Piece {
         // No such point
         return null;
     }
-    
+
     public boolean validEmptyPoint(Point point) {
     	Edge edge = this.getEdge(point);
     	if (!validPoint(point) || edge.getHasBeenCaptured()) {
@@ -206,7 +206,7 @@ public class Board implements Piece {
         Edge edge = this.getEdge(point);
         if (edge == null) {
             return false;
-        } 
+        }
         return true;
     }
 
@@ -240,8 +240,8 @@ public class Board implements Piece {
             return INVALID;
         }
 
-        int redCells = this.getPlayerCells(BLUE);
-        int blueCells = this.getPlayerCells(RED);
+        int redCells = this.getPlayerCells(RED);
+        int blueCells = this.getPlayerCells(BLUE);
 
         if (redCells == blueCells) {
             return DEAD;
@@ -262,7 +262,7 @@ public class Board implements Piece {
         Edge edge = this.getEdge(point);
         if (!edge.getHasBeenCaptured()) {
             edge.setCapturedBy(m.P);
-            this.possibleMoves--;	
+            this.possibleMoves--;
         }
         else {
         	return;
