@@ -193,15 +193,21 @@ public class Board implements Piece {
         // No such point
         return null;
     }
+    
+    public boolean validEmptyPoint(Point point) {
+    	Edge edge = this.getEdge(point);
+    	if (!validPoint(point) || edge.getHasBeenCaptured()) {
+    		return false;
+    	}
+    	return true;
+    }
 
     public boolean validPoint(Point point) {
         Edge edge = this.getEdge(point);
-
-        if (edge == null || edge.getHasBeenCaptured()) {
+        if (edge == null) {
             return false;
-        } else {
-            return true;
-        }
+        } 
+        return true;
     }
 
     public boolean isCapturingPoint(Point point) {
@@ -254,8 +260,13 @@ public class Board implements Piece {
         Point point = new Point(m.Row, m.Col);
 
         Edge edge = this.getEdge(point);
-        edge.setCapturedBy(m.P);
-        this.possibleMoves--;
+        if (!edge.getHasBeenCaptured()) {
+            edge.setCapturedBy(m.P);
+            this.possibleMoves--;	
+        }
+        else {
+        	return;
+        }
 
         for (Cell c: this.EdgeToCells.get(edge)) {
             c.edgeCapturedUpdate(m.P);

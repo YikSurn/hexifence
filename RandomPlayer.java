@@ -44,7 +44,7 @@ public class RandomPlayer implements Player, Piece {
         int col = random.nextInt(max);
         Point point = new Point(row, col);
 
-        while (!this.board.validPoint(point)) {
+        while (!this.board.validEmptyPoint(point)) {
             row = random.nextInt(max);
             col = random.nextInt(max);
             point.setPoint(row, col);
