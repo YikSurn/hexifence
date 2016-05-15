@@ -46,10 +46,6 @@ public class AlphaPlayer implements Player, Piece {
 			}
 			
 			// Check for cut-off 
-			if (bestScore >= beta) {
-				bestMove = move;
-				break;
-			}
 			
 			alpha = Math.max(alpha, bestScore);
 		}
