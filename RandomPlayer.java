@@ -28,7 +28,7 @@ public class RandomPlayer implements Player, Piece {
 
         this.player = p;
         this.boardSize = n;
-        this.board = new Board(n);
+        this.board = new Board(boardSize);
 
         return 0;
     }
@@ -61,7 +61,7 @@ public class RandomPlayer implements Player, Piece {
 
     /* Function called by referee to inform the player about the opponent's move
      * Return -1 if the move is illegal otherwise return 0 if no cell has been
-     * captured by the opponent and return 1 if if one or more cells are captured
+     * captured by the opponent and return 1 if one or more cells are captured
      * by the opponent
      */
     @Override

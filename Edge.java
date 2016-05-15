@@ -24,6 +24,7 @@ public class Edge {
 
     public void setCapturedBy(int player) {
         this.capturedBy = player;
+        this.hasBeenCaptured = true;
     }
 
     @Override

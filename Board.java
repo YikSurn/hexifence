@@ -83,17 +83,6 @@ public class Board implements Piece {
         }
         return counter;
     }
-    
-    public Edge getEdgeOfBoard(Point point) {
-    	
-    }
-    
-    /* Loop through the board, and get the point
-     * 
-     * */
-    public int checkPoint(Point point) {
-    	
-    }
 
     private void newState() {
         int entries = this.boardDimension*4 - 1;
@@ -119,8 +108,6 @@ public class Board implements Piece {
         ArrayList<Point> edgePoints = new ArrayList<Point>(); // store points of edges
         for (int i = 0; i < cellPoints.size(); i++) {
             Cell cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
-            int cellX = cellPoints.get(i).getX();
-            int cellY = cellPoints.get(i).getY();
 
             ArrayList<Point> edgesPoints = getPointOfEdges(cell);
             for (Point edgeP: edgesPoints) {
@@ -168,22 +155,22 @@ public class Board implements Piece {
 
     /* Return the points of the common edge between two cells
     */
-    private Point getCommonEdgePoint(Cell c1, Cell c2) {
-        Point c1Point = c1.getPointOnBoard();
-        int c1X = c1Point.getX();
-        int c1Y = c1Point.getY();
-        Point c2Point = c2.getPointOnBoard();
-        int c2X = c2Point.getX();
-        int c2Y = c2Point.getY();
-
-        // The common edge between two cells would have points
-        // that are directly in the middle of the two cells
-        int commonEdgePointX = (c1X + c2X)/2;
-        int commonEdgePointY = (c1Y + c2Y)/2;
-        Point commonEdgePoint = new Point(commonEdgePointX, commonEdgePointY);
-
-        return commonEdgePoint;
-    }
+//    private Point getCommonEdgePoint(Cell c1, Cell c2) {
+//        Point c1Point = c1.getPointOnBoard();
+//        int c1X = c1Point.getX();
+//        int c1Y = c1Point.getY();
+//        Point c2Point = c2.getPointOnBoard();
+//        int c2X = c2Point.getX();
+//        int c2Y = c2Point.getY();
+//
+//        // The common edge between two cells would have points
+//        // that are directly in the middle of the two cells
+//        int commonEdgePointX = (c1X + c2X)/2;
+//        int commonEdgePointY = (c1Y + c2Y)/2;
+//        Point commonEdgePoint = new Point(commonEdgePointX, commonEdgePointY);
+//
+//        return commonEdgePoint;
+//    }
 
     /* Count all possible moves in a board state */
     private int countPossibleMoves() {
@@ -275,6 +262,7 @@ public class Board implements Piece {
         }
     }
 
+    /* Print the board in rows x cols square format */
     public void printBoard() {
         char value;
         Point p;
