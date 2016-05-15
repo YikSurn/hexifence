@@ -32,13 +32,12 @@ public class Point {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
-            return false;
-        Point another = (Point) obj;
-        if (x != another.x || y != another.y) {
+        if (obj instanceof Point) {
+            Point another = (Point) obj;
+            return (x == another.getX() && y == another.getY());
+        } else {
             return false;
         }
-        return true;
     }
 
 }
