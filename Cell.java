@@ -15,7 +15,6 @@ public class Cell {
     private Point pointOnBoard;
     private Point actualPoint;
     private ArrayList<Edge> edges = new ArrayList<Edge>();
-    // private HashMap<Edge, Cell> = new HashMap<Edge, Cell>();
 
     public Cell(Point pointOnBoard, Point actualPoint) {
         this.pointOnBoard = pointOnBoard;
