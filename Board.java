@@ -260,13 +260,8 @@ public class Board implements Piece {
         Point point = new Point(m.Row, m.Col);
 
         Edge edge = this.getEdge(point);
-        if (!edge.getHasBeenCaptured()) {
-            edge.setCapturedBy(m.P);
-            this.possibleMoves--;	
-        }
-        else {
-        	return;
-        }
+        edge.setCapturedBy(m.P);
+        this.possibleMoves--;	
 
         for (Cell c: this.EdgeToCells.get(edge)) {
             c.edgeCapturedUpdate(m.P);
