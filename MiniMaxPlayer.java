@@ -60,23 +60,31 @@ public class MiniMaxPlayer implements Player, Piece {
         return m;
 	}
 	
-	/* A simple minimax algorithm */
-	private int minimax(Board board, int depth, int maximizingPlayer) {
-		ArrayList<Move> moves = generateMoves(board);
-		// Base case: if leaf node
-		if (depth == 0 || moves.size() == 0) {
-			return evaluateBoardState(board);
-		}
+	/* Recursive minimax at level of depth for either maximizing or minimizing player.
+	 * Return HashMap<Int, Move> of {bestScore -> bestMove}
+	 *  */
+	private HashMap<Integer, Move> minimax(Board board, int depth, int maximizingPlayer) {
 		Double negativeInfinity = Double.NEGATIVE_INFINITY;
 		int bestValue = negativeInfinity.intValue();
+		Move bestMove;
+		ArrayList<Move> moves = generateMoves(board);
+		// Base case: if leaf node
+		if (depth == 0 || moves.isEmpty()) {
+			bestValue = evaluateBoardState(board);
+		}
 		// For each valid move, generate child node and recurse minimax
 		for (Move move: moves) {
 			Board newBoard = generateChildBoard(move,board);
 			int result = minimax(newBoard, depth-1, maximizingPlayer);
-			bestValue = Math.max(bestValue, result);
+			if (result > bestValue) {
+				bestValue = result;
+				bestMove = move;
+			}
 		}
 		
-		return 0;
+		HashMap<Integer, Move> bestStrategy = new HashMap<Integer, Move>();
+		bestStrategy.put(bestValue, bestMove);
+		return bestStrategy;
 	}
 	
 	/* Evaluate a boardState and return an integer that represents
