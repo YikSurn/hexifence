@@ -265,7 +265,14 @@ public class Board implements Piece {
         edge.setCapturedBy(m.P);
         this.possibleMoves--;	
 
+        // Update the cell's edges where the captured edge belongs to 
         for (Cell c: this.EdgeToCells.get(edge)) {
+            for (Edge cellEdge: c.getEdges()) {
+            	if (cellEdge.getPoint().equals(point)) {
+                    cellEdge.setCapturedBy(m.P);
+            	}
+            }
+            // check if the cell is captured by a player
             c.edgeCapturedUpdate(m.P);
         }
     }
