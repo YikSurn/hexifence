@@ -15,9 +15,9 @@ public class RandomPlayer implements Player, Piece {
 
     private Board board;
     private int player;
-    private int boardSize;
+    private int boardDimension;
 
-    /* This funstion is called by the referee to initialise the player.
+    /* This function is called by the referee to initialise the player.
      *  Return 0 for successful initialization and -1 for failed one.
      */
     @Override
@@ -27,8 +27,8 @@ public class RandomPlayer implements Player, Piece {
         }
 
         this.player = p;
-        this.boardSize = n;
-        this.board = new Board(boardSize);
+        this.boardDimension = n;
+        this.board = new Board(this.boardDimension);
 
         return 0;
     }

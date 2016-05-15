@@ -16,17 +16,31 @@ public class Board implements Piece {
     private static final char BLUE_EDGE = 'B';
     private static final char RED_CELL = 'r';
     private static final char BLUE_CELL = 'b';
+    private static final int HEXAGON = 6;
 
     private Point lastOpponentPoint;
     private int boardDimension;
     private int possibleMoves;
-    private ArrayList<Cell> cells = new ArrayList<Cell>();
+    private ArrayList<Cell> cells;
     private HashMap<Edge, ArrayList<Cell>> EdgeToCells = new HashMap<Edge, ArrayList<Cell>>();
 
     public Board(int boardDimension) {
         this.boardDimension = boardDimension;
+        int cells = this.numberOfCells(boardDimension);
+        this.cells = new ArrayList<Cell>(cells);
+
         this.newState();
         this.possibleMoves = this.countPossibleMoves();
+    }
+
+    private int numberOfCells(int boardDimension) {
+        if (boardDimension == 1) {
+            return 1;
+        }
+
+        // with minimum board dimension of 2, number of cells in the outer later is (boardDimension-1)*6
+        int outerCells = (boardDimension - 1) * HEXAGON;
+        return numberOfCells(boardDimension - 1) + outerCells;
     }
 
     public int getBoardDimension() {
@@ -263,7 +277,7 @@ public class Board implements Piece {
 
         Edge edge = this.getEdge(point);
         edge.setCapturedBy(m.P);
-        this.possibleMoves--;	
+        this.possibleMoves--;
 
         // Update the cell's edges where the captured edge belongs to 
         for (Cell c: this.EdgeToCells.get(edge)) {
