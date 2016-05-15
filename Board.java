@@ -33,7 +33,11 @@ public class Board implements Piece {
         this.possibleMoves = this.countPossibleMoves();
     }
 
-    private int numberOfCells(int boardDimension) {
+    public HashMap<Edge, ArrayList<Cell>> getEdgeToCells() {
+		return EdgeToCells;
+	}
+
+	private int numberOfCells(int boardDimension) {
         if (boardDimension == 1) {
             return 1;
         }
