@@ -193,20 +193,22 @@ public class Board implements Piece {
         // No such point
         return null;
     }
-    
-    public boolean validEmptyPoint(Point point) {
+
+    /* Return true if point is a valid empty edge point of a hexifence */
+    public boolean validPoint(Point point) {
     	Edge edge = this.getEdge(point);
-    	if (!validPoint(point) || edge.getHasBeenCaptured()) {
+    	if (!isEdgePoint(point) || edge.getHasBeenCaptured()) {
     		return false;
     	}
     	return true;
     }
 
-    public boolean validPoint(Point point) {
+    /* Return true if point is an edge point, false otherwise */
+    public boolean isEdgePoint(Point point) {
         Edge edge = this.getEdge(point);
         if (edge == null) {
             return false;
-        } 
+        }
         return true;
     }
 
@@ -236,12 +238,12 @@ public class Board implements Piece {
     public int getWinner() {
         if (this.getPossibleMoves() > 0) {
             return EMPTY;
-        } else if (!this.validPoint(this.lastOpponentPoint)) {
+        } else if (!this.isEdgePoint(this.lastOpponentPoint)) {
             return INVALID;
         }
 
-        int redCells = this.getPlayerCells(BLUE);
-        int blueCells = this.getPlayerCells(RED);
+        int redCells = this.getPlayerCells(RED);
+        int blueCells = this.getPlayerCells(BLUE);
 
         if (redCells == blueCells) {
             return DEAD;
