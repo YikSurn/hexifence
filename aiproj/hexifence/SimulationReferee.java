@@ -40,11 +40,13 @@ public class SimulationReferee implements Piece{
 
         System.out.println("Number of games played : " + NUM_GAMES);
         System.out.println();
-        System.out.println("Number of wins (BLUE) : " + blueWins);
-        System.out.println("Number of wins (RED)  : " + redWins);
+        System.out.println("BLUE - " + args[1]);
+        System.out.println("Number of wins : " + blueWins);
+        System.out.println("Probability of winning : " + ((float)blueWins/NUM_GAMES*100) + "%");
         System.out.println();
-        System.out.println("Probability of winning (BLUE) : " + ((float)blueWins/NUM_GAMES*100) + "%");
-        System.out.println("Probability of winning (RED)  : " + ((float)redWins/NUM_GAMES*100) + "%");
+        System.out.println("RED - " + args[2]);
+        System.out.println("Number of wins  : " + redWins);
+        System.out.println("Probability of winning : " + ((float)redWins/NUM_GAMES*100) + "%");
         System.out.println();
         System.out.println("Games with errors : " + (NUM_GAMES - blueWins - redWins));
         System.out.println();
