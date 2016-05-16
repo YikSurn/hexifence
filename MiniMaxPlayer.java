@@ -157,11 +157,34 @@ public class MiniMaxPlayer implements Player, Piece {
 
 	/* Generate board child node based on a new move applied by player
 	 * */
-	private char[][] generateChildBoardState(Move move, char[][] boardState, int boardSize) {
+	private char[][] generateChildBoardState(Move move, char[][] boardState, int boardSize, int maximizingPlayer) {
 		char[][] newBoardState = boardState.clone();
 		newBoardState[move.Row][move.Col] = this.edgeIdentity;
+		// Get the cell point associated with the captured edge
+		Point edgePoint = new Point(move.Row, move.Col);
+		HashMap<Point, ArrayList<Point>> edgeAssociatedCells = Board.generateEdgeToCellsPoints();
+		// Loop through the associated cell, and get all the edges that belong to the cell
+		for (Point cellPoints: edgeAssociatedCells.get(edgePoint)) {
+			ArrayList<Point> allAssociatedEdgePoints = Cell.getPointOfCellEdges(cellPoints);
+			int numEdgeCaptured = 0;
+			// Increment counter if edges are captured
+			for (Point edges: allAssociatedEdgePoints) {
+				if (newBoardState[edges.getX()][edges.getY()] == (Board.RED_EDGE || Board.BLUE_EDGE)) {
+					numEdgeCaptured += 1;
+				}
+			}
+			// If fully captured and cell point is not labeled, this suggests
+			// that maximizingPlayer's move has successfully captured cell
+			char cellValue = newBoardState[cellPoints.getX()][cellPoints.getY()];
+			if (numEdgeCaptured == Board.HEXAGON && 
+					cellValue == Board.NA_POINT) {
+				cellValue = maximizingPlayer == RED ? Board.RED_CELL : Board.BLUE_CELL;
+			}
+			
+		}
 		return newBoardState;
 	}
+	
 
 	/* Generate child node of a board by deep copying existing board
 	 * and apply new Move to board
