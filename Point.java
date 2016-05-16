@@ -5,7 +5,7 @@ import java.io.Serializable;
  * Angeline Lim (angelinel)
  */
 
-public class Point implements Serializable {
+public class Point {
 
     private int x;
     private int y;

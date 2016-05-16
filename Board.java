@@ -6,20 +6,19 @@
 
 import aiproj.hexifence.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Board implements Piece, Serializable {
+public class Board implements Piece {
 
-    private static final char NA_POINT = '-';
-    private static final char EMPTY_EDGE = '+';
-    private static final char RED_EDGE = 'R';
-    private static final char BLUE_EDGE = 'B';
-    private static final char RED_CELL = 'r';
-    private static final char BLUE_CELL = 'b';
-    private static final int HEXAGON = 6;
+    public static final char NA_POINT = '-';
+    public static final char EMPTY_EDGE = '+';
+    public static final char RED_EDGE = 'R';
+    public static final char BLUE_EDGE = 'B';
+    public static final char RED_CELL = 'r';
+    public static final char BLUE_CELL = 'b';
+    public static final int HEXAGON = 6;
 
     private Point lastOpponentPoint;
     private int boardDimension;
