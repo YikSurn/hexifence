@@ -1,7 +1,9 @@
 import java.io.PrintStream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.lang.Object;
 
 import aiproj.hexifence.Move;
 import aiproj.hexifence.Piece;
@@ -13,6 +15,7 @@ public class MiniMaxPlayer implements Player, Piece {
     private int player;
     private int boardDimension;
     private char cellIdentity;
+    private char edgeIdentity;
 
 
 	@Override
@@ -20,10 +23,11 @@ public class MiniMaxPlayer implements Player, Piece {
         if (p != BLUE && p != RED) {
             return INVALID;
         }
-        this.cellIdentity = p == BLUE ? 'b' : 'r';
         this.player = p;
         this.boardDimension = n;
         this.board = new Board(this.boardDimension);
+        this.cellIdentity = p == BLUE ? 'b' : 'r';
+        this.edgeIdentity = p == BLUE? 'B': 'R';
 
         return 0;
 	}
@@ -131,27 +135,57 @@ public class MiniMaxPlayer implements Player, Piece {
         return allLegalMoves;
 	}
 	
-	/* Generate board child node based on a new move applied by player */
-	private Board generateChildBoard(Move move, Board boardState) {
-		
+	/* Generate board child node based on a new move applied by player 
+	 * */
+//	private char[][] generateChildBoardState(Move move, char[][] boardState, int boardSize) {
+//		char[][] newBoardState = boardState.clone();
+//		newBoardState[move.Row][move.Col] = this.edgeIdentity;
+//		return newBoardState;
+//	}
+	
+	/* Generate child node of a board by deep copying existing board
+	 * and apply new Move to board
+	 * */
+	private Board generateChildBoard(Move move, Board board) {
+		Board newBoard = (Board) DeepCopy.copy(board);
+		newBoard.update(move);
+		return newBoard;
 	}
 
 	@Override
 	public int opponentMove(Move m) {
 		// TODO Auto-generated method stub
-		return 0;
+        Point point = new Point(m.Row, m.Col);
+
+        // Check for invalidity
+        if (m.P == this.player) {
+            // Check if opponent incorrectly labelled the move as player's own move
+            return INVALID;
+        } else if (!this.board.validPoint(point)) {
+            return INVALID;
+        }
+
+        // Opponent's move is valid
+        this.board.setLastOpponentPoint(point);
+        this.board.update(m);
+        if (this.board.isCapturingPoint(point)) {
+            return 1;
+        } else {
+            // No cell has been captured
+            return 0;
+        }
 	}
 
 	@Override
 	public int getWinner() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.board.getWinner();
 	}
 
 	@Override
 	public void printBoard(PrintStream output) {
 		// TODO Auto-generated method stub
-		
+		this.board.printBoard();
 	}
 
 }

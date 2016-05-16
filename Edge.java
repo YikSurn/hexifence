@@ -1,9 +1,11 @@
+import java.io.Serializable;
+
 /* Authors:
  * Yik Surn Chong (yikc)
  * Angeline Lim (angelinel)
  */
 
-public class Edge {
+public class Edge implements Serializable {
 
     private boolean hasBeenCaptured;
     private int capturedBy;

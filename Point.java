@@ -1,9 +1,11 @@
+import java.io.Serializable;
+
 /* Authors:
  * Yik Surn Chong (yikc)
  * Angeline Lim (angelinel)
  */
 
-public class Point {
+public class Point implements Serializable {
 
     private int x;
     private int y;
