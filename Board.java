@@ -131,7 +131,7 @@ public class Board implements Piece, Serializable {
         for (int i = 0; i < cellPoints.size(); i++) {
             Cell cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
 
-            ArrayList<Point> edgePointsOfCell = getPointOfEdges(cell);
+            ArrayList<Point> edgePointsOfCell = Cell.getPointOfCellEdges(cellPoints.get(i));
             for (Point edgeP: edgePointsOfCell) {
                 edge = null;
 
@@ -162,25 +162,6 @@ public class Board implements Piece, Serializable {
             }
             this.cells.add(cell);
         }
-    }
-
-    /* Returns the points of the edges of a cell
-    */
-    private ArrayList<Point> getPointOfEdges(Cell cell) {
-        Point cellPoint = cell.getPointOnBoard();
-        int cellX = cellPoint.getX();
-        int cellY = cellPoint.getY();
-
-        ArrayList<Point> edgePointsOfCell = new ArrayList<Point>(6);
-
-        edgePointsOfCell.add(new Point(cellX - 1, cellY - 1));
-        edgePointsOfCell.add(new Point(cellX - 1, cellY));
-        edgePointsOfCell.add(new Point(cellX, cellY - 1));
-        edgePointsOfCell.add(new Point(cellX, cellY + 1));
-        edgePointsOfCell.add(new Point(cellX + 1, cellY));
-        edgePointsOfCell.add(new Point(cellX + 1, cellY + 1));
-
-        return edgePointsOfCell;
     }
 
     /* Return the points of the common edge between two cells
