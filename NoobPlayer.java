@@ -20,7 +20,7 @@ public class NoobPlayer implements Player, Piece {
     private int player;
     private int boardDimension;
 
-    /* This function is called by the referee to initialise the player.
+    /* This function is called by the referee to initialize the player.
      *  Return 0 for successful initialization and -1 for failed one.
      */
     @Override
