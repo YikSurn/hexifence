@@ -16,12 +16,13 @@ import aiproj.hexifence.Player;
 public class AlphaPlayer implements Player, Piece {
 
     private Board board;
-    private int player;
-    private int opposingPlayer;
     private int boardDimension;
+    private int player;
     private char cellIdentity;
-    private char opponentCellIdentity;
     private char edgeIdentity;
+    private int oppPlayer;
+    private char oppCellIdentity;
+    private char oppEdgeIdentity;
     private HashMap<Point, ArrayList<Point>> edgeAssociatedCells;
     private HashMap<Move, Integer> bestMoveHistoryScore = new HashMap<Move, Integer>();
 
@@ -31,21 +32,24 @@ public class AlphaPlayer implements Player, Piece {
         if (p != BLUE && p != RED) {
             return INVALID;
         }
-        this.player = p;
-        if (p == BLUE) {
-        	cellIdentity = 'b';
-        	edgeIdentity = 'B';
-        	opponentCellIdentity = 'r';
-        	opposingPlayer = RED;
-        }
-        else {
-        	cellIdentity = 'r';
-        	edgeIdentity = 'R';
-        	opponentCellIdentity = 'b';
-        	opposingPlayer = BLUE;
-        }
         this.boardDimension = n;
         this.board = new Board(this.boardDimension);
+        this.edgeAssociatedCells = this.board.generateEdgeToCellsPoints();
+
+        this.player = p;
+        if (p == BLUE) {
+            this.cellIdentity = Board.BLUE_CELL;
+            this.edgeIdentity = Board.BLUE_EDGE;
+            this.oppPlayer = RED;
+            this.oppCellIdentity = Board.RED_CELL;
+            this.oppEdgeIdentity = Board.RED_EDGE;
+        } else {
+            this.cellIdentity = Board.RED_CELL;
+            this.edgeIdentity = Board.RED_EDGE;
+            this.oppPlayer = BLUE;
+            this.oppCellIdentity = Board.BLUE_CELL;
+            this.oppEdgeIdentity = Board.BLUE_EDGE;
+        }
 
         return 0;
 	}
@@ -55,7 +59,7 @@ public class AlphaPlayer implements Player, Piece {
 	 * */
 	@Override
 	public Move makeMove() {
-		int THRESHOLD = 60;
+		int THRESHOLD = 10;
 		Move m = new Move();
 
         Point capturePoint = this.board.pointToCaptureCell();
@@ -109,6 +113,8 @@ public class AlphaPlayer implements Player, Piece {
 			bestValue = evaluateBoardState(boardState);
 		}
 		else {
+			// Sort moves such that highest rated move is at the end
+			sortMoveBasedOnHistory(moves);
 			if (maximizingPlayer) {
 				bestValue = Integer.MIN_VALUE;
 				for (Move move: moves) {
@@ -125,6 +131,12 @@ public class AlphaPlayer implements Player, Piece {
 						break; // cut-off
 					}
 				}
+				// Update history score for best move
+				int historyScore = 0;
+				if (bestMoveHistoryScore.get(bestMove) != null) {
+					bestMoveHistoryScore.get(bestMove); 
+				}
+				bestMoveHistoryScore.put(bestMove, historyScore + 2);
 			}
 			else {
 				bestValue = Integer.MAX_VALUE;
@@ -172,10 +184,17 @@ public class AlphaPlayer implements Player, Piece {
 	 * assigned to each move
 	 * */
 	private ArrayList<Move> sortMoveBasedOnHistory(ArrayList<Move> moves) {
+		// Don't do anything if history score table is empty
+		if (bestMoveHistoryScore.isEmpty()) {
+			return moves;
+		}
 		ArrayList<Move> sortedMoves = new ArrayList<Move>();
 		// Sort an array of history score 
 		ArrayList<Integer> sortedScore = new ArrayList<Integer>();
 		for (Move move: moves) {
+			if (bestMoveHistoryScore.get(move) == null) {
+				continue;
+			}
 			int historyScore = bestMoveHistoryScore.get(move);
 			sortedScore.add(historyScore);
 		}
@@ -183,10 +202,14 @@ public class AlphaPlayer implements Player, Piece {
 
 		// Allocate moves to same index location as that of sorted score(s)
 		for (int n = 0; n < moves.size(); n++) {
+			if (bestMoveHistoryScore.get(moves.get(n)) == null) {
+				continue;
+			}
 			int historyScore = bestMoveHistoryScore.get(moves.get(n));
 			int index = sortedScore.indexOf(historyScore);
 			sortedMoves.add(index, moves.get(n));
 		}
+		return sortedMoves;
 	}
 
 	/* Generate a list of all legal moves of existing boardState
@@ -240,7 +263,7 @@ public class AlphaPlayer implements Player, Piece {
 			char cellValue = newBoardState[cellPoints.getX()][cellPoints.getY()];
 			if (numEdgeCaptured == Board.HEXAGON && 
 					cellValue == Board.NA_POINT) {
-				cellValue = maximizingPlayer ? this.cellIdentity : this.opponentCellIdentity;
+				cellValue = maximizingPlayer ? this.cellIdentity : this.oppCellIdentity;
 			}		
 		}
 		return newBoardState;

@@ -60,7 +60,7 @@ public class MiniMaxPlayer implements Player, Piece {
      * */
     @Override
     public Move makeMove() {
-        int THRESHOLD = 40;
+        int THRESHOLD = 10;
         Move m = new Move();
 
         Point capturePoint = this.board.pointToCaptureCell();
