@@ -39,7 +39,7 @@ public class Board implements Piece, Serializable {
     /* A class method that generates a dictionary of edge point on board to its
      * respective cell(s) point(s)
      * */
-    public static HashMap<Point, ArrayList<Point>> generateEdgeToCellsPoints() {
+    public HashMap<Point, ArrayList<Point>> generateEdgeToCellsPoints() {
     	HashMap<Point, ArrayList<Point>> edgeToCellPoints = new HashMap<Point, ArrayList<Point>>();
         Edge edge;
         ArrayList<Cell> edgeCells;
