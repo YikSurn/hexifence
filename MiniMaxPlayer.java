@@ -157,11 +157,11 @@ public class MiniMaxPlayer implements Player, Piece {
 
 	/* Generate board child node based on a new move applied by player
 	 * */
-//	private char[][] generateChildBoardState(Move move, char[][] boardState, int boardSize) {
-//		char[][] newBoardState = boardState.clone();
-//		newBoardState[move.Row][move.Col] = this.edgeIdentity;
-//		return newBoardState;
-//	}
+	private char[][] generateChildBoardState(Move move, char[][] boardState, int boardSize) {
+		char[][] newBoardState = boardState.clone();
+		newBoardState[move.Row][move.Col] = this.edgeIdentity;
+		return newBoardState;
+	}
 
 	/* Generate child node of a board by deep copying existing board
 	 * and apply new Move to board
