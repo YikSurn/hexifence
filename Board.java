@@ -66,7 +66,7 @@ public class Board implements Piece {
 	}
 
 	public static int numberOfCells(int boardDimension) {
-        if (boardDimension == 1) {
+        if (boardDimension == 1) { 
             return 1;
         }
 

@@ -118,10 +118,17 @@ public class MiniMaxPlayer implements Player, Piece {
             // For each valid move, generate child node and recurse minimax
             for (Move move: moves) {
                 // Try this move on the player
-                char[][] childBoard = generateChildBoardState(move, boardState);
+            	Point capturedCellPoint = checkIfCaptureCell(move, boardState);
+                char[][] childBoard = generateChildBoardState(move, boardState, capturedCellPoint);
 
                 if (maxPlayer) {
-                    HashMap<Integer, Move> result = minimax(childBoard, depth-1, false);
+                	HashMap<Integer, Move> result;
+                	if (capturedCellPoint != null) {
+                		result = minimax(childBoard, depth-1, true);
+                	}
+                	else {
+                		result = minimax(childBoard, depth-1, false); 		
+                	}              
                     int resultValue = (int) result.keySet().toArray()[0];
                     if (resultValue > bestValue) {
                         bestValue = resultValue;
@@ -129,7 +136,13 @@ public class MiniMaxPlayer implements Player, Piece {
                     }
                 }
                 else {
-                    HashMap<Integer, Move> result = minimax(childBoard, depth-1, true);
+                	HashMap<Integer, Move> result;
+                	if (capturedCellPoint != null) {
+                		result = minimax(childBoard, depth-1, true);
+                	}
+                	else {
+                		result = minimax(childBoard, depth-1, false); 		
+                	}  
                     int resultValue = (int) result.keySet().toArray()[0];
                     if (resultValue < bestValue) {
                         bestValue = resultValue;
@@ -187,12 +200,24 @@ public class MiniMaxPlayer implements Player, Piece {
 
     /* Generate board child node based on a new move applied by player
      * */
-    private char[][] generateChildBoardState(Move move, char[][] boardState) {
+    private char[][] generateChildBoardState(Move move, char[][] boardState, Point capturedCellPoint) {
         // Copy board state over and make a move
         char[][] newBoardState = boardState.clone();
         // If maxPlayer, means it is this player's turn, so move was made by opponent
         newBoardState[move.Row][move.Col] = move.P == this.player ? this.edgeIdentity : this.oppEdgeIdentity;
-
+        if (capturedCellPoint != null) {
+        	newBoardState[capturedCellPoint.getX()][capturedCellPoint.getY()] = move.P == this.player ? this.cellIdentity : this.oppCellIdentity;
+        }
+        
+        return newBoardState;
+    }
+    
+    /* Check if move is a capturing cell move
+     * */
+    Point checkIfCaptureCell(Move move, char[][] boardState) {
+    	char[][] newBoardState = boardState.clone();
+    	newBoardState[move.Row][move.Col] = move.P == this.player ? this.edgeIdentity : this.oppEdgeIdentity;
+ 
         // Get the cell point associated with the captured edge
         ArrayList<Point> cellPointsOfEdge = new ArrayList<Point>();
         for (Point edgePoint : edgeAssociatedCells.keySet()) {
@@ -200,7 +225,7 @@ public class MiniMaxPlayer implements Player, Piece {
                 cellPointsOfEdge = edgeAssociatedCells.get(edgePoint);
             }
         }
-
+       
         // Loop through the associated cell, and get all the edges that belong to the cell
         for (Point cellPoints: cellPointsOfEdge) {
             ArrayList<Point> allAssociatedEdgePoints = Cell.getPointOfCellEdges(cellPoints);
@@ -218,12 +243,11 @@ public class MiniMaxPlayer implements Player, Piece {
             char cellValue = newBoardState[cellPoints.getX()][cellPoints.getY()];
             if (numEdgeCaptured == Board.HEXAGON &&
                     cellValue == Board.NA_POINT) {
-                // If maxPlayer, means it is this player's turn, so move was made by opponent
-                newBoardState[cellPoints.getX()][cellPoints.getY()] = move.P == this.player ? this.cellIdentity : this.oppCellIdentity;
+            	// If maxPlayer, means it is this player's turn, so move was made by opponent
+            	return new Point(cellPoints.getX(), cellPoints.getY());            
             }
-        }
-
-        return newBoardState;
+        } 
+        return null;
     }
 
     /* Function called by referee to inform the player about the opponent's move

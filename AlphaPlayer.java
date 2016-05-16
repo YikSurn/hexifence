@@ -172,6 +172,8 @@ public class AlphaPlayer implements Player, Piece {
 	 * assigned to each move
 	 * */
 	private ArrayList<Move> sortMoveBasedOnHistory(ArrayList<Move> moves) {
+		ArrayList<Move> sortedMoves = new ArrayList<Move>();
+		// Sort an array of history score 
 		ArrayList<Integer> sortedScore = new ArrayList<Integer>();
 		for (Move move: moves) {
 			int historyScore = bestMoveHistoryScore.get(move);
@@ -181,15 +183,9 @@ public class AlphaPlayer implements Player, Piece {
 
 		// Allocate moves to same index location as that of sorted score(s)
 		for (int n = 0; n < moves.size(); n++) {
-			if (bestMoveHistoryScore.get(moves.get(n)) == ) {
-				
-			}
-		}
-		
-		Collections.sort(moves, new Comparator<Move>()) {
-			public int compare(Move move1, Move move2) {
-				
-			}
+			int historyScore = bestMoveHistoryScore.get(moves.get(n));
+			int index = sortedScore.indexOf(historyScore);
+			sortedMoves.add(index, moves.get(n));
 		}
 	}
 
