@@ -70,13 +70,16 @@ public class MiniMaxPlayer implements Player, Piece {
 		int bestValue = negativeInfinity.intValue();
 		Move bestMove = new Move();
 		ArrayList<Move> moves = generateMoves(board);
+
 		// Base case: if leaf node
 		if (depth == 0 || moves.isEmpty()) {
 			bestValue = evaluateBoardState(board);
 		}
+
 		// For each valid move, generate child node and recurse minimax
 		for (Move move: moves) {
 			Board newBoard = generateChildBoard(move,board);
+			// Recurse minimax
 			HashMap<Integer, Move> result = minimax(newBoard, depth-1);
 			int resultValue = (int) result.keySet().toArray()[0];
 			if (resultValue > bestValue) {
@@ -106,13 +109,29 @@ public class MiniMaxPlayer implements Player, Piece {
 		return numCapturedCells/2 + 1;
 	}
 	
-	/* Generate a list of legal moves based on an existing boardState
+	/* Generate a list of all legal moves of existing boardState
 	 * */
 	private ArrayList<Move> generateMoves(Board board) {
-		char[][] boardState = board.getBoardIn2DArray();
+		ArrayList<Move> allLegalMoves = new ArrayList<Move>();
+        char[][] boardState = board.getBoardIn2DArray();
+        int boardSize = board.calcBoardSize();
+
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+            	// Represents a possible move that's available for capture
+                if (boardState[row][col] == '+') {
+                    Move legalMove = new Move();
+                    legalMove.P = this.player;
+                    legalMove.Row = row;
+                    legalMove.Col = col;  
+                    allLegalMoves.add(legalMove);
+                }
+            }
+        }
+        return allLegalMoves;
 	}
 	
-	/* Generate child node based on a new move applied by player */
+	/* Generate board child node based on a new move applied by player */
 	private Board generateChildBoard(Move move, Board boardState) {
 		
 	}
