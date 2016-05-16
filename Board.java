@@ -28,7 +28,7 @@ public class Board implements Piece {
 
     public Board(int boardDimension) {
         this.boardDimension = boardDimension;
-        int cells = this.numberOfCells(boardDimension);
+        int cells = Board.numberOfCells(boardDimension);
         this.cells = new ArrayList<Cell>(cells);
 
         this.newState();
@@ -65,7 +65,7 @@ public class Board implements Piece {
 		return EdgeToCells;
 	}
 
-	private int numberOfCells(int boardDimension) {
+	public static int numberOfCells(int boardDimension) {
         if (boardDimension == 1) {
             return 1;
         }
