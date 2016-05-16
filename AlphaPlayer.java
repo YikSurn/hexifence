@@ -1,5 +1,9 @@
 import java.io.PrintStream;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.lang.Math;
 
 import aiproj.hexifence.Move;
 import aiproj.hexifence.Piece;
@@ -13,7 +17,8 @@ public class AlphaPlayer implements Player, Piece {
 
     private Board board;
     private int player;
-    private int boardSize;
+    private int boardDimension;
+    private char cellIdentity;
 
     /* This function is called by the referee to initialize the player.
      *  Return 0 for successful initialization and -1 for failed one.
@@ -27,6 +32,7 @@ public class AlphaPlayer implements Player, Piece {
         this.player = p;
         this.boardDimension = n;
         this.board = new Board(this.boardDimension);
+        this.cellIdentity = p == BLUE ? 'b' : 'r';
 
         return 0;
     }
@@ -72,22 +78,22 @@ public class AlphaPlayer implements Player, Piece {
     }
 
     /* A simple alpha beta pruning algorithm */
-    public int alphaBeta(char[][] boardState,int depth, int alpha, int beta, boolean maxPlayer) {
+    public int alphaBeta(Board board,int depth, int alpha, int beta, boolean maxPlayer) {
         int bestValue;
         Move bestMove;
-        ArrayList<Move> moves = generateMoves(boardState);
+        ArrayList<Move> moves = generateMoves(board);
 
         // Base case: at leaf node
         if (depth == 0 || moves.isEmpty()) {
-            return evaluateBoardState(boardState);
+            return evaluateBoardState(board);
         }
 
         if (maxPlayer) {
             bestValue = Integer.MIN_VALUE;
             for (Move move: moves) {
                 Board childBoard = generateChildBoard(move, board);
-                bestValue = max(bestValue, alphaBeta(childBoard, depth - 1, alpha, beta, FALSE));
-                alpha = max(alpha, bestValue);
+                bestValue = Math.max(bestValue, alphaBeta(childBoard, depth - 1, alpha, beta, false));
+                alpha = Math.max(alpha, bestValue);
                 if (beta <= alpha) {
                     break;
                 }
@@ -97,8 +103,8 @@ public class AlphaPlayer implements Player, Piece {
             bestValue = Integer.MAX_VALUE;
             for (Move move: moves) {
                 Board childBoard = generateChildBoard(move, board);
-                bestValue = min(bestValue, alphaBeta(childBoard, depth - 1, alpha, beta, TRUE));
-                beta = min(beta, bestValue);
+                bestValue = Math.min(bestValue, alphaBeta(childBoard, depth - 1, alpha, beta, true));
+                beta = Math.min(beta, bestValue);
                 if (beta <= alpha) {
                     break;
                 }
@@ -145,10 +151,10 @@ public class AlphaPlayer implements Player, Piece {
     private ArrayList<Move> generateMoves(Board board) {
         ArrayList<Move> allLegalMoves = new ArrayList<Move>();
         char[][] boardState = board.getBoardIn2DArray();
-        int boardSize = board.calcBoardSize();
+        int boardDimension = board.calcBoardSize();
 
-        for (int row = 0; row < boardSize; row++) {
-            for (int col = 0; col < boardSize; col++) {
+        for (int row = 0; row < boardDimension; row++) {
+            for (int col = 0; col < boardDimension; col++) {
                 // Represents a possible move that's available for capture
                 if (boardState[row][col] == '+') {
                     Move legalMove = new Move();
@@ -160,6 +166,15 @@ public class AlphaPlayer implements Player, Piece {
             }
         }
         return allLegalMoves;
+    }
+
+    /* Generate child node of a board by deep copying existing board
+     * and apply new Move to board
+     * */
+    private Board generateChildBoard(Move move, Board board) {
+        Board newBoard = (Board) DeepCopy.copy(board);
+        newBoard.update(move);
+        return newBoard;
     }
 
     /* Generate a new boardState based on a new move made by player */
