@@ -24,6 +24,24 @@ public class Cell implements Serializable {
         this.captured = false;
     }
 
+    /* Returns the points of the edges of a cell
+    */
+    public static ArrayList<Point> getPointOfCellEdges(Point cellPointOnBoard) {
+        int cellX = cellPointOnBoard.getX();
+        int cellY = cellPointOnBoard.getY();
+
+        ArrayList<Point> edgePointsOfCell = new ArrayList<Point>(6);
+
+        edgePointsOfCell.add(new Point(cellX - 1, cellY - 1));
+        edgePointsOfCell.add(new Point(cellX - 1, cellY));
+        edgePointsOfCell.add(new Point(cellX, cellY - 1));
+        edgePointsOfCell.add(new Point(cellX, cellY + 1));
+        edgePointsOfCell.add(new Point(cellX + 1, cellY));
+        edgePointsOfCell.add(new Point(cellX + 1, cellY + 1));
+
+        return edgePointsOfCell;
+    }
+
     public int getNumSidesUncaptured() {
         return this.numSidesUncaptured;
     }

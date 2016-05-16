@@ -9,6 +9,7 @@ import aiproj.hexifence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 public class Board implements Piece, Serializable {
 
@@ -35,14 +36,32 @@ public class Board implements Piece, Serializable {
         this.possibleMoves = this.countPossibleMoves();
     }
 
-    /* A class method that generates a dictionary of edge point on board to its 
+    /* A class method that generates a dictionary of edge point on board to its
      * respective cell(s) point(s)
      * */
     public static HashMap<Point, ArrayList<Point>> generateEdgeToCellsPoints() {
     	HashMap<Point, ArrayList<Point>> edgeToCellPoints = new HashMap<Point, ArrayList<Point>>();
+        Edge edge;
+        ArrayList<Cell> edgeCells;
+        Point edgePoint;
+        ArrayList<Point> cellPoints;
+
+        for (Map.Entry<Edge,ArrayList<Cell>> entry : this.EdgeToCells.entrySet()) {
+            edge = entry.getKey();
+            edgeCells = entry.getValue();
+
+            edgePoint = edge.getPoint();
+            cellPoints = new ArrayList<Point>(2);
+            for (Cell c: edgeCells) {
+                cellPoints.add(c.getPointOnBoard());
+            }
+
+            edgeToCellPoints.put(edgePoint, cellPoints);
+        }
+
     	return edgeToCellPoints;
     }
-    
+
     public HashMap<Edge, ArrayList<Cell>> getEdgeToCells() {
 		return EdgeToCells;
 	}
@@ -139,7 +158,7 @@ public class Board implements Piece, Serializable {
         for (int i = 0; i < cellPoints.size(); i++) {
             Cell cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
 
-            ArrayList<Point> edgePointsOfCell = getPointOfEdges(cell);
+            ArrayList<Point> edgePointsOfCell = Cell.getPointOfCellEdges(cellPoints.get(i));
             for (Point edgeP: edgePointsOfCell) {
                 edge = null;
 
@@ -170,25 +189,6 @@ public class Board implements Piece, Serializable {
             }
             this.cells.add(cell);
         }
-    }
-
-    /* Returns the points of the edges of a cell
-    */
-    private ArrayList<Point> getPointOfEdges(Cell cell) {
-        Point cellPoint = cell.getPointOnBoard();
-        int cellX = cellPoint.getX();
-        int cellY = cellPoint.getY();
-
-        ArrayList<Point> edgePointsOfCell = new ArrayList<Point>(6);
-
-        edgePointsOfCell.add(new Point(cellX - 1, cellY - 1));
-        edgePointsOfCell.add(new Point(cellX - 1, cellY));
-        edgePointsOfCell.add(new Point(cellX, cellY - 1));
-        edgePointsOfCell.add(new Point(cellX, cellY + 1));
-        edgePointsOfCell.add(new Point(cellX + 1, cellY));
-        edgePointsOfCell.add(new Point(cellX + 1, cellY + 1));
-
-        return edgePointsOfCell;
     }
 
     /* Return the points of the common edge between two cells
@@ -308,7 +308,7 @@ public class Board implements Piece, Serializable {
             c.edgeCapturedUpdate(m.P);
         }
     }
-    
+
 
     /* Return two-dimension char array that represents the current
      * board state of the game
