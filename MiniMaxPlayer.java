@@ -38,7 +38,7 @@ public class MiniMaxPlayer implements Player, Piece {
 	 * */
 	@Override
 	public Move makeMove() {
-		int threshold = 10;
+		int threshold = 7;
 		Move m = new Move();
 		// Start invoking minimax 
 		if (board.getPossibleMoves() <= threshold) {
