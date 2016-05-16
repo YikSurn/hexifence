@@ -135,6 +135,9 @@ public class CustomizedReferee implements Piece{
 		System.out.println("P1 Board is :");
 		P1.printBoard(System.out);
 
+        System.out.println("BLUE - " + args[1]);
+        System.out.println("RED - " + args[2]);
+        System.out.println();
 		System.out.println("Player one (BLUE) indicate winner as: "+ P1.getWinner());
 		System.out.println("Player two (RED) indicate winner as: "+ P2.getWinner());
 		System.out.println("Total Number of Moves Played in the Game: "+ NumberofMoves);
