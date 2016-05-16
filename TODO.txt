@@ -1,0 +1,2 @@
+* value of end goal depends on number of cells captured
+    * turn the utility to a sigmoid function
