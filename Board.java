@@ -1,14 +1,16 @@
 /* Authors:
+
  * Yik Surn Chong (yikc)
  * Angeline Lim (angelinel)
  */
 
 import aiproj.hexifence.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Board implements Piece {
+public class Board implements Piece, Serializable {
 
     private static final char NA_POINT = '-';
     private static final char EMPTY_EDGE = '+';

@@ -3,9 +3,10 @@
  * Angeline Lim (angelinel)
  */
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Cell {
+public class Cell implements Serializable {
 
     public static final int MAX_EDGES = 6;
 
