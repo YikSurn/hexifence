@@ -422,8 +422,8 @@ public class Board implements Piece {
         int blueCells = this.getPlayerCells(BLUE);
         int redCells = this.getPlayerCells(RED);
 
-        System.out.printf("Number of cells (BLUE): " + blueCells + "\n");
-        System.out.printf("Number of cells (RED) : " + redCells + "\n");
+        System.out.println("Number of cells (BLUE): " + blueCells);
+        System.out.println("Number of cells (RED) : " + redCells);
     }
 
     /* Return size of board in terms of max rows/cols it can have
