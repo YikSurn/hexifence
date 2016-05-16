@@ -152,7 +152,7 @@ public class AlphaPlayer implements Player, Piece {
 					beta = Math.min(beta, bestValue);
 					if (beta <= alpha) {
 						break; // cut-off
-					}					
+					}
 				}
 			}
 		}
@@ -168,7 +168,7 @@ public class AlphaPlayer implements Player, Piece {
 	private int evaluateBoardState(char[][] boardState) {
 		int numCapturedCells = 0;
 
-		char playerCellIdentity = this.cellIdentity; 
+		char playerCellIdentity = this.cellIdentity;
 		int boardSize = boardState.length;
 		for (int row = 0; row < boardSize; row++) {
 			for (int col = 0; col < boardSize; col++) {
@@ -179,8 +179,8 @@ public class AlphaPlayer implements Player, Piece {
 		}
 		return numCapturedCells/2 + 1;
 	}
-	
-	/* Sort an array list of Move based on the history heuristic score 
+
+	/* Sort an array list of Move based on the history heuristic score
 	 * assigned to each move
 	 * */
 	private ArrayList<Move> sortMoveBasedOnHistory(ArrayList<Move> moves) {
@@ -189,7 +189,7 @@ public class AlphaPlayer implements Player, Piece {
 			return moves;
 		}
 		ArrayList<Move> sortedMoves = new ArrayList<Move>();
-		// Sort an array of history score 
+		// Sort an array of history score
 		ArrayList<Integer> sortedScore = new ArrayList<Integer>();
 		for (Move move: moves) {
 			if (bestMoveHistoryScore.get(move) == null) {
@@ -209,7 +209,12 @@ public class AlphaPlayer implements Player, Piece {
 			int index = sortedScore.indexOf(historyScore);
 			sortedMoves.add(index, moves.get(n));
 		}
+<<<<<<< HEAD
 		return sortedMoves;
+=======
+
+        return sortedMoves;
+>>>>>>> c45bdde9f43b408b685950fa9c732fc3de20686a
 	}
 
 	/* Generate a list of all legal moves of existing boardState
@@ -230,7 +235,7 @@ public class AlphaPlayer implements Player, Piece {
                 }
             }
         }
-        return allLegalMoves;	
+        return allLegalMoves;
 	}
 
 	/* Generate board child node based on a new move applied by player
@@ -239,7 +244,7 @@ public class AlphaPlayer implements Player, Piece {
 		// Copy board state over and make a move
 		char[][] newBoardState = boardState.clone();
 		newBoardState[move.Row][move.Col] = this.edgeIdentity;
-		
+
 		// Get the cell point associated with the captured edge
 		ArrayList<Point> cellPointsOfEdge = new ArrayList<Point>();
 		for (Point edge : edgeAssociatedCells.keySet()) {
@@ -253,7 +258,7 @@ public class AlphaPlayer implements Player, Piece {
 			int numEdgeCaptured = 0;
 			// Increment counter if edges are captured
 			for (Point edges: allAssociatedEdgePoints) {
-				if (newBoardState[edges.getX()][edges.getY()] == Board.RED_EDGE || 
+				if (newBoardState[edges.getX()][edges.getY()] == Board.RED_EDGE ||
 						newBoardState[edges.getX()][edges.getY()] == Board.BLUE_EDGE) {
 					numEdgeCaptured += 1;
 				}
@@ -261,14 +266,19 @@ public class AlphaPlayer implements Player, Piece {
 			// If fully captured and cell point is not labeled, this suggests
 			// that maximizingPlayer's move has successfully captured cell
 			char cellValue = newBoardState[cellPoints.getX()][cellPoints.getY()];
-			if (numEdgeCaptured == Board.HEXAGON && 
+			if (numEdgeCaptured == Board.HEXAGON &&
 					cellValue == Board.NA_POINT) {
+<<<<<<< HEAD
 				cellValue = maximizingPlayer ? this.cellIdentity : this.oppCellIdentity;
 			}		
+=======
+				cellValue = maximizingPlayer ? this.cellIdentity : this.opponentCellIdentity;
+			}
+>>>>>>> c45bdde9f43b408b685950fa9c732fc3de20686a
 		}
 		return newBoardState;
 	}
-	
+
 
 	/* Generate child node of a board by deep copying existing board
 	 * and apply new Move to board
