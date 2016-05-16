@@ -39,7 +39,7 @@ public class MiniMaxPlayer implements Player, Piece {
 	 * */
 	@Override
 	public Move makeMove() {
-		int THRESHOLD = 20;
+		int THRESHOLD = 30;
 		Move m = new Move();
 
         Point capturePoint = this.board.pointToCaptureCell();
@@ -95,7 +95,6 @@ public class MiniMaxPlayer implements Player, Piece {
 		else {
 			// For each valid move, generate child node and recurse minimax
 			for (Move move: moves) {
-				System.out.println(move.Row + " " + move.Col);
 				// Try this move on the player
 				char[][] newBoard = generateChildBoardState(move, boardState, maximizingPlayer);
 				if (maximizingPlayer == this.player) {
@@ -169,9 +168,14 @@ public class MiniMaxPlayer implements Player, Piece {
 		newBoardState[move.Row][move.Col] = this.edgeIdentity;
 		
 		// Get the cell point associated with the captured edge
-		Point edgePoint = new Point(move.Row, move.Col);
+		ArrayList<Point> cellPointsOfEdge = new ArrayList<Point>();
+		for (Point edge : edgeAssociatedCells.keySet()) {
+			if (edge.getX() == move.Row && edge.getY() == move.Col) {
+				cellPointsOfEdge = edgeAssociatedCells.get(edge);
+			}
+		}
 		// Loop through the associated cell, and get all the edges that belong to the cell
-		for (Point cellPoints: edgeAssociatedCells.get(edgePoint)) {
+		for (Point cellPoints: cellPointsOfEdge) {
 			ArrayList<Point> allAssociatedEdgePoints = Cell.getPointOfCellEdges(cellPoints);
 			int numEdgeCaptured = 0;
 			// Increment counter if edges are captured
