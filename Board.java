@@ -35,14 +35,32 @@ public class Board implements Piece, Serializable {
         this.possibleMoves = this.countPossibleMoves();
     }
 
-    /* A class method that generates a dictionary of edge point on board to its 
+    /* A class method that generates a dictionary of edge point on board to its
      * respective cell(s) point(s)
      * */
     public static HashMap<Point, ArrayList<Point>> generateEdgeToCellsPoints() {
     	HashMap<Point, ArrayList<Point>> edgeToCellPoints = new HashMap<Point, ArrayList<Point>>();
+        Edge edge;
+        ArrayList<Cell> edgeCells;
+        Point edgePoint;
+        ArrayList<Point> cellPoints;
+
+        for (Map.Entry<Edge,ArrayList<Cell>> entry : this.EdgeToCells.entrySet()) {
+            edge = entry.getKey();
+            edgeCells = entry.getValue();
+
+            edgePoint = edge.getPoint();
+            cellPoints = new ArrayList<Point>(2);
+            for (Cell c: edgeCells) {
+                cellPoints.add(c.getPointOnBoard());
+            }
+
+            edgeToCellPoints.put(edgePoint, cellPoints);
+        }
+
     	return edgeToCellPoints;
     }
-    
+
     public HashMap<Edge, ArrayList<Cell>> getEdgeToCells() {
 		return EdgeToCells;
 	}
@@ -289,7 +307,7 @@ public class Board implements Piece, Serializable {
             c.edgeCapturedUpdate(m.P);
         }
     }
-    
+
 
     /* Return two-dimension char array that represents the current
      * board state of the game
