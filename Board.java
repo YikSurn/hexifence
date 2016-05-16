@@ -6,12 +6,11 @@
 
 import aiproj.hexifence.*;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Board implements Piece, Serializable {
+public class Board implements Piece {
 
     public static final char NA_POINT = '-';
     public static final char EMPTY_EDGE = '+';
