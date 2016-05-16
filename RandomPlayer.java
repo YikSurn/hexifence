@@ -76,15 +76,19 @@ public class RandomPlayer implements Player, Piece {
             return INVALID;
         }
 
-        // Opponent's move is valid
-        this.board.setLastOpponentPoint(point);
-        this.board.update(m);
+        // Opponent's move is valid, check if the move captures a cell
+        int value;
         if (this.board.isCapturingPoint(point)) {
-            return 1;
+            value = 1;
         } else {
             // No cell has been captured
-            return 0;
+            value = 0;
         }
+
+        // Record the move and update board
+        this.board.setLastOpponentPoint(point);
+        this.board.update(m);
+        return value;
     }
 
     /* This function when called by referee should return the winner
