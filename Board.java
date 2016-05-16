@@ -301,6 +301,9 @@ public class Board implements Piece {
 
     /* Print the board in rows x cols square format */
     public void printBoard() {
+        // To be removed, print now for extra stats on the game results
+        this.printOngoingStats();
+
         char value;
         Point p;
         int x, y;
@@ -356,5 +359,60 @@ public class Board implements Piece {
             }
             System.out.println();
         }
+        System.out.println();
+    }
+
+    public Point pointToCaptureCell() {
+        for (Cell c: this.cells) {
+            if (c.canCaptureByOneMove()) {
+                Edge edge = c.getUncapturedEdges().get(0);
+                return edge.getPoint();
+            }
+        }
+
+        return null;
+    }
+
+    public ArrayList<Edge> getAllUncapturedEdges() {
+        ArrayList<Edge> uncapturedEdges = new ArrayList<Edge>();
+        for (Edge e: this.EdgeToCells.keySet()) {
+            if (!e.getHasBeenCaptured()) {
+                uncapturedEdges.add(e);
+            }
+        }
+
+        return uncapturedEdges;
+    }
+
+    // Edges where it would not lead to an opponent capturing a cell in the next turn
+    public ArrayList<Edge> getSafeEdges() {
+        int MIN_SAFE_UNCAPTURED_EDGES = 3;
+        ArrayList<Edge> uncapturedEdges = this.getAllUncapturedEdges();
+        ArrayList<Edge> safeEdges = new ArrayList<Edge>();
+
+        boolean safeEdge;
+        for (Edge e: uncapturedEdges) {
+            safeEdge = true;
+            for (Cell c: this.EdgeToCells.get(e)) {
+                if (c.getNumSidesUncaptured() < MIN_SAFE_UNCAPTURED_EDGES) {
+                    safeEdge = false;
+                    break;
+                }
+            }
+
+            if (safeEdge == true) {
+                safeEdges.add(e);
+            }
+        }
+
+        return safeEdges;
+    }
+
+    private void printOngoingStats() {
+        int blueCells = this.getPlayerCells(BLUE);
+        int redCells = this.getPlayerCells(RED);
+
+        System.out.printf("Number of cells (BLUE): " + blueCells + "\n");
+        System.out.printf("Number of cells (RED) : " + redCells + "\n");
     }
 }
