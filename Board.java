@@ -298,13 +298,15 @@ public class Board implements Piece {
             c.edgeCapturedUpdate(m.P);
         }
     }
-
-    /* Print the board in rows x cols square format */
-    public void printBoard() {
-        char value;
-        Point p;
-        int x, y;
-        int boardSize = this.boardDimension*4 - 1;
+    
+    /* Return two-dimension char array that represents the current
+     * board state of the game
+     * */
+    public char[][] getBoardIn2DArray() {
+    	char value;
+    	Point p;
+    	int x, y;
+    	int boardSize = calcBoardSize();
         char[][] board = new char[boardSize][boardSize];
 
         for (Edge e: this.EdgeToCells.keySet()) {
@@ -323,7 +325,7 @@ public class Board implements Piece {
             y = p.getY();
             board[x][y] = value;
         }
-
+        
         for (Cell c: this.cells) {
             if (c.isCaptured()) {
                 if (c.getCapturedBy() == RED) {
@@ -345,7 +347,15 @@ public class Board implements Piece {
                     board[i][j] = NA_POINT;
                 }
             }
-        }
+        }       
+        return board;
+        
+    }
+
+    /* Print the board in rows x cols square format */
+    public void printBoard() {
+        char[][] board = getBoardIn2DArray();
+        int boardSize = calcBoardSize();
 
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
@@ -356,5 +366,11 @@ public class Board implements Piece {
             }
             System.out.println();
         }
+    }
+    
+    /* Return size of board in terms of max rows/cols it can have
+     * */
+    public int calcBoardSize() {
+    	return  this.boardDimension*4 - 1;
     }
 }
