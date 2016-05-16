@@ -37,18 +37,18 @@ public class AlphaPlayer implements Player, Piece {
 			return evaluateBoardState(boardState);
 		}
 		
-		for(Move move: nextMoves) {
-			char[][] newBoardState = generateState(move);
-			// Recursive call
-			int result = alphaBetaPruning(newBoardState, alpha, beta, depth-1);
-			if (result > bestScore) {
-				bestScore = result;
-			}
-			
-			// Check for cut-off 
-			
-			alpha = Math.max(alpha, bestScore);
-		}
+//		for(Move move: nextMoves) {
+//			char[][] newBoardState = generateState(move);
+//			// Recursive call
+//			int result = alphaBetaPruning(newBoardState, alpha, beta, depth-1);
+//			if (result > bestScore) {
+//				bestScore = result;
+//			}
+//			
+//			// Check for cut-off 
+//			
+//			alpha = Math.max(alpha, bestScore);
+//		}
 		
 		// Update history score for best move
 		
@@ -74,9 +74,9 @@ public class AlphaPlayer implements Player, Piece {
 	}
 	
 	/* Generate a new boardState based on a new move made by player */
-	private char[][] generateState(Move move) {
-		
-	}
+//	private char[][] generateState(Move move) {
+//		
+//	}
 
 	@Override
 	public int opponentMove(Move m) {

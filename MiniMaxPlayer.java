@@ -71,20 +71,19 @@ public class MiniMaxPlayer implements Player, Piece {
 	 * Return HashMap<Int, Move> of {bestScore -> bestMove}
 	 *  */
 	private HashMap<Integer, Move> minimax(Board board, int depth, int maximizingPlayer) {
-		Double negativeInfinity = Double.NEGATIVE_INFINITY;
-		int bestValue = negativeInfinity.intValue();
+		int bestValue = Integer.MIN_VALUE;
 		Move bestMove = new Move();
 		ArrayList<Move> moves = generateMoves(board);
 
-		// Base case: if leaf node
+		// If next move is empty or depth reaches the end 
 		if (depth == 0 || moves.isEmpty()) {
 			bestValue = evaluateBoardState(board);
 		}
 
 		// For each valid move, generate child node and recurse minimax
 		for (Move move: moves) {
+			// Try this move on the player
 			Board newBoard = generateChildBoard(move,board);
-			// Recurse minimax
 			if (maximizingPlayer == this.player) {
 				HashMap<Integer, Move> result = minimax(newBoard, depth-1, this.opposingPlayer);
 				int resultValue = (int) result.keySet().toArray()[0];
@@ -101,6 +100,8 @@ public class MiniMaxPlayer implements Player, Piece {
 					bestMove = move;
 				}				
 			}
+			// Undo move
+			newBoard = null;
 		}
 		
 		HashMap<Integer, Move> bestStrategy = new HashMap<Integer, Move>();
