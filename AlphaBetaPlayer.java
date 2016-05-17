@@ -63,7 +63,7 @@ public class AlphaBetaPlayer implements Player, Piece {
      * */
     @Override
     public Move makeMove() {
-        // Takes 4 seconds for depth of 12 and 25 seconds for depth of 13
+        // Takes 6 seconds for depth of 12 and 25 seconds for depth of 13
         int THRESHOLD = 12;
 
         // Declare constants for alpha beta pruning
