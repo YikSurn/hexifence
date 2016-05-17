@@ -309,7 +309,11 @@ public class Board implements Piece {
     }
 
 
-    /* Return two-dimension char array that represents the current
+    public ArrayList<Cell> getCells() {
+		return cells;
+	}
+
+	/* Return two-dimension char array that represents the current
      * board state of the game
      * */
     public char[][] getBoardIn2DArray() {
