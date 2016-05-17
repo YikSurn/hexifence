@@ -66,7 +66,7 @@ public class HistoryAlphaPlayer implements Player, Piece {
     @Override
     public Move makeMove() {
         // Takes 6 seconds for depth of 11 and 17 seconds for depth of 12
-        int THRESHOLD = 31;
+        int THRESHOLD = 35;
 
         // Declare constants for alpha beta pruning
         int ALPHA = Integer.MIN_VALUE;
