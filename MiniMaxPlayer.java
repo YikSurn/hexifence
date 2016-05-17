@@ -296,6 +296,7 @@ public class MiniMaxPlayer implements Player, Piece {
     */
     private int getNumSafeEdges(char[][] boardState) {
         int MIN_SAFE_UNCAPTURED_EDGES = 3;
+        // Assume no safe edges 
         int safeEdges = 0;
 
         ArrayList<Point> allCellPoints = new ArrayList<Point>();
@@ -309,12 +310,12 @@ public class MiniMaxPlayer implements Player, Piece {
             // For every edges associated with cell, if empty edges exceeds threshold
             for (Point edgePoint: Cell.getPointOfCellEdges(cell.getPointOnBoard())) {
                 if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE){
-                    emptyEdges += 1;
+                    emptyEdges++;
                 }
-                // consider as safe edges
-                if (emptyEdges >= MIN_SAFE_UNCAPTURED_EDGES) {
-                    safeEdges += 1;
-                }
+            }
+            // consider as safe edges
+            if (emptyEdges >= MIN_SAFE_UNCAPTURED_EDGES) {
+                safeEdges++;
             }
         }
         return safeEdges;
