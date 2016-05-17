@@ -63,8 +63,8 @@ public class MiniMaxPlayer implements Player, Piece {
      * */
     @Override
     public Move makeMove() {
-        // Takes 6 seconds for depth of 9 and 60 seconds for depth of 10
-        int THRESHOLD = 22;
+        // Takes 6 seconds for depth of 31 and 31 seconds for depth of 32
+        int THRESHOLD = 31;
         Move m = new Move();
 
         // Capture a cell when possible
@@ -122,8 +122,7 @@ public class MiniMaxPlayer implements Player, Piece {
      * Call this function when there are no more safe edges left in the board
      */
     public Map<Integer, ArrayList<Point>> generateNumCellsToPointsMade(char[][] boardState) {
-        if (this.getNumSafeEdges(boardState) != 0) {
-            System.out.println("I was evaluated");
+        if (this.get2DSafeEdges(boardState).size() != 0) {
             return null;
         }
 
@@ -232,17 +231,16 @@ public class MiniMaxPlayer implements Player, Piece {
         int player = maxPlayer ? this.player : this.oppPlayer;
         Move bestMove = null;
 
-        ArrayList<Move> moves = generateMoves(boardState, player);
-
         // If game state has reaches the point where all cells only has at most 2 uncaptured cells
-        int safeEdgesNum = this.getNumSafeEdges(boardState);
-        if (safeEdgesNum == 0) {
+        ArrayList<Move> safeMoves = generateMoves(boardState, player);
+
+        if (safeMoves.size() == 0) {
             bestValue = predictWinningBoardState(boardState, possibleMoves, maxPlayer);
         }
         else {
             bestValue = maxPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
             // For each valid move, generate child node and recurse minimax
-            for (Move move: moves) {
+            for (Move move: safeMoves) {
                 // If there is a cell player can fully captured in one move, return as best move
                 Point capturedCellPoint = checkIfCaptureCell(move, boardState);
                 if (capturedCellPoint != null) {
@@ -293,9 +291,10 @@ public class MiniMaxPlayer implements Player, Piece {
     /* Get the number of edges where capturing that edge would
      * not lead to opponent capturing cell in the next move
     */
-    private int getNumSafeEdges(char[][] boardState) {
+    private ArrayList<Point> get2DSafeEdges(char[][] boardState) {
         int MIN_SAFE_UNCAPTURED_EDGES = 3;
-        int numSafeEdge = 0;
+        ArrayList<Point> safeEdges = new ArrayList<Point>();
+
         // For each available edge, check if it's a safe edge
         for (Point edgePoint: edgeAssociatedCells.keySet()) {
             if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
@@ -313,11 +312,11 @@ public class MiniMaxPlayer implements Player, Piece {
                     }
                 }
                 if (safeEdge) {
-                    numSafeEdge++;
+                    safeEdges.add(edgePoint);
                 }
             }
         }
-        return numSafeEdge;
+        return safeEdges;
     }
 
     /* Return the point on board that will capture the minimum number of cells
@@ -377,22 +376,17 @@ public class MiniMaxPlayer implements Player, Piece {
     /* Generate a list of all legal moves of existing boardState
      * */
     private ArrayList<Move> generateMoves(char[][] boardState, int player) {
-        ArrayList<Move> allLegalMoves = new ArrayList<Move>();
-        int boardSize = boardState.length;
+        ArrayList<Move> allSafeMoves = new ArrayList<Move>();
+        ArrayList<Point> safeEdges = this.get2DSafeEdges(boardState);
 
-        for (int row = 0; row < boardSize; row++) {
-            for (int col = 0; col < boardSize; col++) {
-                // Represents a possible move that's available for capture
-                if (boardState[row][col] == Board.EMPTY_EDGE) {
-                    Move legalMove = new Move();
-                    legalMove.P = player;
-                    legalMove.Row = row;
-                    legalMove.Col = col;
-                    allLegalMoves.add(legalMove);
-                }
-            }
+        for (Point edgePoint: safeEdges) {
+            Move safeMove = new Move();
+            safeMove.P = player;
+            safeMove.Row = edgePoint.getX();
+            safeMove.Col = edgePoint.getY();
+            allSafeMoves.add(safeMove);
         }
-        return allLegalMoves;
+        return allSafeMoves;
     }
 
     /* Generate board child node based on a new move applied by player

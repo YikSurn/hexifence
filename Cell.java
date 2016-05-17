@@ -103,13 +103,13 @@ public class Cell implements Serializable {
     /* Return a list of uncaptured edges that belongs to this cell
     */
     public ArrayList<Edge> getUncapturedEdges() {
-        ArrayList<Edge> edges = new ArrayList<Edge>(this.edges.size());
+        ArrayList<Edge> uncapturedEdges = new ArrayList<Edge>(this.edges.size());
         for (Edge edge: this.edges) {
             if (!edge.getHasBeenCaptured()) {
-                edges.add(edge);
+                uncapturedEdges.add(edge);
             }
         }
-        return edges;
+        return uncapturedEdges;
     }
 
     /* Return true if this cell can be captured by one move, false otherwise
