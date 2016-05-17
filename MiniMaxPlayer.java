@@ -9,6 +9,7 @@ import java.io.PrintStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.lang.Math;
@@ -29,7 +30,7 @@ public class MiniMaxPlayer implements Player, Piece {
     private char oppCellIdentity;
     private char oppEdgeIdentity;
     private HashMap<Point, ArrayList<Point>> edgeAssociatedCells;
-    private HashMap<Integer, ArrayList<Point>> numCellsToPointsMade;
+    private HashMap<Integer, ArrayList<Point>> numCellsToPointsMade = null;
 
     @Override
     public int init(int n, int p) {
@@ -90,7 +91,6 @@ public class MiniMaxPlayer implements Player, Piece {
 
             ArrayList<Edge> safeEdges = this.board.getSafeEdges();
             if (safeEdges.size() == 0) {
-
                 if (this.numCellsToPointsMade == null) {
                     this.numCellsToPointsMade = this.generateNumCellsToPointsMade();
                     // for (Map.Entry<Integer ,ArrayList<Point>> entry : this.numCellsToPointsMade.entrySet()) {
@@ -121,8 +121,8 @@ public class MiniMaxPlayer implements Player, Piece {
         return m;
     }
 
-    /* Generate a dictionary where the key is the number of cells that could
-     * be captured in one go if the opponent is to make a move in the array of points
+    /* Generate a dictionary where the key is the number of cells that can
+     * be captured in one go if the opponent makes a move in the array of points
      * (the value of dictionary)
      *
      * Call this function when there are no more safe edges left in the board
@@ -133,6 +133,7 @@ public class MiniMaxPlayer implements Player, Piece {
         }
 
         char[][] boardState = this.board.getBoardIn2DArray();
+        // Store all points of edges that has yet to be captured
         ArrayList<Point> uncapturedEdgePoints = new ArrayList<Point>();
         for (Point edgePoint: this.edgeAssociatedCells.keySet()) {
             if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
@@ -148,6 +149,7 @@ public class MiniMaxPlayer implements Player, Piece {
             dupBoard[edgeX][edgeY] = this.edgeIdentity;
 
             // Start recursion function
+            // Find number of cells that can be captured if player were to make this move
             ArrayList<Point> affectedCells = this.edgeAssociatedCells.get(edgePoint);
             int numCells = calculateCellsCapturable(dupBoard, affectedCells);
 
@@ -165,13 +167,14 @@ public class MiniMaxPlayer implements Player, Piece {
         return numCellsToPointsMade;
     }
 
-    /* Recursive function to return the number of cells that could be captured based on a move made by opposing player
+    /* Recursive function to return the number of cells that could be captured 
+     * based on a move made by opposing player
      */
     private int calculateCellsCapturable(char[][] boardState, ArrayList<Point> affectedCells) {
         int numCells = 0;
 
         if (affectedCells != null) {
-            // Loop through the associated cell, and get all the edges that belong to the cell
+            // Loop through points of associated cell, and get all the edges that belong to the cell
             for (Point cellPoint: affectedCells) {
                 ArrayList<Point> allAssociatedEdgePoints = Cell.getPointOfCellEdges(cellPoint);
                 Point nextEdgePoint = null;
@@ -215,6 +218,8 @@ public class MiniMaxPlayer implements Player, Piece {
         return numCells;
     }
 
+    /* Return Point in board state that would result in capturing of cell by one move
+    */
     private ArrayList<Point> getAssociatedCellPoints(Point edgePoint) {
         for (Point p: this.edgeAssociatedCells.keySet()) {
             if (p.equals(edgePoint)) {
@@ -235,9 +240,10 @@ public class MiniMaxPlayer implements Player, Piece {
 
         ArrayList<Move> moves = generateMoves(boardState, player);
 
-        // If next move is empty or depth reaches the end
-        if (possibleMoves == 0) {
-            bestValue = evaluateBoardState(boardState);
+        // If game state has reaches the point where all cells only has at most 2 uncaptured cells
+        ArrayList<Edge> safeEdges = this.board.getSafeEdges();
+        if (safeEdges.size() == 0) {
+            bestValue = predictWinningBoardState(boardState, possibleMoves, maxPlayer);
         }
         else {
             bestValue = maxPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
@@ -280,6 +286,55 @@ public class MiniMaxPlayer implements Player, Piece {
         HashMap<Integer, Move> bestStrategy = new HashMap<Integer, Move>();
         bestStrategy.put(bestValue, bestMove);
         return bestStrategy;
+    }
+
+    /* Return the point on board that will capture the minimum number of cells
+    */
+    private Point getPointThatCaptureLowestNumCells() {
+        if (numCellsToPointsMade == null) {
+            return null;
+        }
+        int lowest = Integer.MAX_VALUE;
+        for (Map.Entry<Integer ,ArrayList<Point>> entry : this.numCellsToPointsMade.entrySet()) {
+        	int numCells = entry.getKey();
+        	if (lowest > numCells) {
+        		lowest = numCells;
+        	}
+        }
+        // Return the first edge point that leads to the lowest num cells, and update hash map
+        ArrayList<Point> edgePoints = this.numCellsToPointsMade.get(lowest);
+        Point bestMove = edgePoints.get(0);
+        edgePoints.remove(bestMove);
+        if (edgePoints.isEmpty()) {
+        	this.numCellsToPointsMade.remove(lowest);
+        }
+        else {
+        	this.numCellsToPointsMade.put(lowest, edgePoints);
+        }
+        return bestMove;
+    }
+
+    /* Based on the number of possible moves, predict the winning board state
+     * assuming both player(s) are rational and want to win
+    */
+    private int predictWinningBoardState(char[][] boardState, int possibleMoves, boolean maxPlayer) {
+        // If next move is empty or depth reaches the end
+        if (possibleMoves == 0) {
+            return evaluateBoardState(boardState);
+        }
+        else {
+            // Get the move where player capture lowest num of cell
+        	Point bestPoint = getPointThatCaptureLowestNumCells();
+        	// Update board state based on that move
+        	if (maxPlayer) {
+            	boardState[bestPoint.getX()][bestPoint.getY()] = this.edgeIdentity;
+        	}
+        	else {
+        		boardState[bestPoint.getX()][bestPoint.getY()] = this.oppCellIdentity;
+        	}
+            // recursive call to predict final board state
+        	return predictWinningBoardState(boardState, possibleMoves-1, !maxPlayer);
+        }
     }
 
     /* Evaluate a boardState and return an integer that represents
