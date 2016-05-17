@@ -146,8 +146,7 @@ public class CustomizedReferee implements Piece{
 		double endTime = System.currentTimeMillis();
         double totalTime = endTime - startTime;
         System.out.println();
-        System.out.println("Total time taken (milliseconds) : " + totalTime);
-        System.out.println("Total time taken (seconds)      : " + (totalTime/1000));
+        System.out.println("Total time taken (seconds) : " + (totalTime/1000));
 	}
 
 
