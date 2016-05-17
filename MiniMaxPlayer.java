@@ -249,8 +249,15 @@ public class MiniMaxPlayer implements Player, Piece {
             bestValue = maxPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
             // For each valid move, generate child node and recurse minimax
             for (Move move: moves) {
-                // Try this move on the player
+                // If there is a cell player can fully captured in one move, return as best move
             	Point capturedCellPoint = checkIfCaptureCell(move, boardState);
+                if (capturedCellPoint != null) {
+                    bestMove.P = maxPlayer ? this.player : this.oppPlayer;
+                    bestMove.Row = capturedCellPoint.getX();
+                    bestMove.Col = capturedCellPoint.getY();
+                    break;
+                }
+                // Try this move on the player
                 char[][] childBoard = generateChildBoardState(move, boardState, capturedCellPoint);
             	HashMap<Integer, Move> result;
 
