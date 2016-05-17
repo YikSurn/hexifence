@@ -35,18 +35,12 @@ public class Edge {
             return true;
         if (obj == null)
             return false;
-        if (getClass() != obj.getClass())
+        if (obj instanceof Edge) {
+            Edge another = (Edge) obj;
+            return another.getPoint().equals(this.point);
+        } else {
             return false;
-        Edge another = (Edge) obj;
-        if (another.getPoint().equals(this.point)) {
-            return true;
         }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return 0;
     }
 
 	public int getCapturedBy() {
