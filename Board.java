@@ -220,7 +220,7 @@ public class Board implements Piece {
         return possibleMoves;
     }
 
-    private Edge getEdge(Point p) {
+    public Edge getEdge(Point p) {
         for (Edge e: this.EdgeToCells.keySet()) {
             if (e.getPoint().equals(p)) {
                 return e;
