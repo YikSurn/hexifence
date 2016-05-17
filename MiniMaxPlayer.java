@@ -64,7 +64,7 @@ public class MiniMaxPlayer implements Player, Piece {
     @Override
     public Move makeMove() {
         // Takes 6 seconds for depth of 9 and 60 seconds for depth of 10
-        int THRESHOLD = 27;
+        int THRESHOLD = 22;
         Move m = new Move();
 
         // Capture a cell when possible
@@ -78,29 +78,12 @@ public class MiniMaxPlayer implements Player, Piece {
             if (this.numCellsToPointsMade == null) {
                 char[][] boardState = this.board.getBoardIn2DArray();
                 this.numCellsToPointsMade = this.generateNumCellsToPointsMade(boardState);
-                // for (Map.Entry<Integer ,ArrayList<Point>> entry : this.numCellsToPointsMade.entrySet()) {
-                //     int numCells = entry.getKey();
-                //     ArrayList<Point> edgePoints = entry.getValue();
-                //     System.out.println("Num cells :" + numCells);
-                //     System.out.println("Number of the points :" + edgePoints.size());
-                // }
             }
-            // TreeMap is already sorted
-            outerloop:
-            for (ArrayList<Point> edgePointBatch: this.numCellsToPointsMade.values()) {
-                for (Point edgePoint: edgePointBatch) {
-                    if (!this.board.getEdge(edgePoint).getHasBeenCaptured()) {
-                        m.P = this.player;
-                        m.Row = edgePoint.getX();
-                        m.Col = edgePoint.getY();
-                        break outerloop;
-                    }
-                }
-            }
-            // Point bestMovePoint = getPointThatCaptureLowestNumCells();
-            // m.P = this.player;
-            // m.Row = bestMovePoint.getX();
-            // m.Col = bestMovePoint.getY();
+
+            Point bestMovePoint = getPointThatCaptureLowestNumCells(this.numCellsToPointsMade);
+            m.P = this.player;
+            m.Row = bestMovePoint.getX();
+            m.Col = bestMovePoint.getY();
         } else if (this.board.getPossibleMoves() <= THRESHOLD) {
             // Start invoking minimax when below threshold
             char[][] boardState = this.board.getBoardIn2DArray();
@@ -209,7 +192,7 @@ public class MiniMaxPlayer implements Player, Piece {
 
                     // There is either none or one nextAffectedCell
                     Point nextAffectedCell = null;
-                    for (Point nextCellPoint: getAssociatedCellPoints(nextEdgePoint)) {
+                    for (Point nextCellPoint: this.getAssociatedCellPoints(nextEdgePoint)) {
                         if (!nextCellPoint.equals(cellPoint)) {
                             nextAffectedCell = nextCellPoint;
                             break;
@@ -313,7 +296,6 @@ public class MiniMaxPlayer implements Player, Piece {
     private int getNumSafeEdges(char[][] boardState) {
         int MIN_SAFE_UNCAPTURED_EDGES = 3;
         int numSafeEdge = 0;
-
         // For each available edge, check if it's a safe edge
         for (Point edgePoint: edgeAssociatedCells.keySet()) {
             if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
@@ -349,7 +331,7 @@ public class MiniMaxPlayer implements Player, Piece {
                 }
             }
         }
-        
+
         return null;
     }
 
