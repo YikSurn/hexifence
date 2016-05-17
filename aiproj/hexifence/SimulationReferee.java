@@ -13,7 +13,7 @@ package aiproj.hexifence;
 
 public class SimulationReferee implements Piece{
 
-    private static int NUM_GAMES = 1000;
+    private static int NUM_GAMES = 100;
     private static Player P1;
     private static Player P2;
     private static Move lastPlayedMove;
@@ -28,6 +28,10 @@ public class SimulationReferee implements Piece{
 
         double startTime = System.currentTimeMillis();
         for (int i=0; i<NUM_GAMES; i++) {
+            if (i%(NUM_GAMES/10) == 0) {
+                System.out.println("Game No. : " + (i+1));
+            }
+
             winner = playGame(args);
             if (winner == BLUE) {
                 blueWins++;
@@ -50,8 +54,7 @@ public class SimulationReferee implements Piece{
         System.out.println();
         System.out.println("Games with errors : " + (NUM_GAMES - blueWins - redWins));
         System.out.println();
-        System.out.println("Total time taken (milliseconds) : " + totalTime);
-        System.out.println("Total time taken (seconds)      : " + (totalTime/1000));
+        System.out.println("Total time taken (seconds) : " + (totalTime/1000));
     }
 
     public static int playGame(String[] args)
