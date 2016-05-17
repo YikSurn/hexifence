@@ -170,6 +170,7 @@ public class HistoryAlphaPlayer implements Player, Piece {
             if (bestMoveHistoryScore.get(bestMove) != null) {
                 bestMoveHistoryScore.get(bestMove);
             }
+            // bestMoveHistoryScore.put(bestMove, (int) (historyScore + Math.pow(2, possibleMoves)));
             bestMoveHistoryScore.put(bestMove, historyScore + 2);
         }
 
