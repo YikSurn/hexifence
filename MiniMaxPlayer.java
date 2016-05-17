@@ -340,23 +340,17 @@ public class MiniMaxPlayer implements Player, Piece {
     */
     private int predictWinningBoardState(char[][] boardState, int possibleMoves, boolean maxPlayer) {
         Map<Integer, ArrayList<Point>> numCellsToPointsMade = this.generateNumCellsToPointsMade(boardState);
-        // If next move is empty or depth reaches the end
-        if (possibleMoves == 0) {
-            return evaluateBoardState(boardState);
-        }
-        else {
-            // Get the move where player capture lowest num of cell
+        while(possibleMoves > 0) {
             Point bestPoint = getPointThatCaptureLowestNumCells(numCellsToPointsMade);
-            // Update board state based on that move
             if (maxPlayer) {
                 boardState[bestPoint.getX()][bestPoint.getY()] = this.edgeIdentity;
             }
             else {
                 boardState[bestPoint.getX()][bestPoint.getY()] = this.oppCellIdentity;
             }
-            // recursive call to predict final board state
-            return predictWinningBoardState(boardState, possibleMoves-1, !maxPlayer);
+            possibleMoves--;
         }
+        return evaluateBoardState(boardState);
     }
 
     /* Evaluate a boardState and return an integer that represents
