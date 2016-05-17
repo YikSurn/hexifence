@@ -123,7 +123,7 @@ public class AlphaBetaPlayer implements Player, Piece {
         else {
             bestValue = maxPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
             // Sort moves such that the highest rated move is at the end
-             sortMoveBasedOnHistory(moves);
+//             sortMoveBasedOnHistory(moves);
             // For each valid move, generate child node and recurse minimax
             for (Move move: moves) {
                 // Try this move on the player
@@ -166,6 +166,11 @@ public class AlphaBetaPlayer implements Player, Piece {
                     }
                 }
             }
+            int historyScore = 0;
+            if (bestMoveHistoryScore.get(bestMove) != null) {
+                bestMoveHistoryScore.get(bestMove);
+            }
+            bestMoveHistoryScore.put(bestMove, historyScore + 2);
         }
 
         HashMap<Integer, Move> bestStrategy = new HashMap<Integer, Move>();
