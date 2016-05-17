@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.lang.Math;
+import java.util.Map;
 
 /*
  *  MiniMax player
@@ -28,6 +29,7 @@ public class MiniMaxPlayer implements Player, Piece {
     private char oppCellIdentity;
     private char oppEdgeIdentity;
     private HashMap<Point, ArrayList<Point>> edgeAssociatedCells;
+    private HashMap<Integer, ArrayList<Point>> numCellsToPointsMade;
 
     @Override
     public int init(int n, int p) {
@@ -88,6 +90,17 @@ public class MiniMaxPlayer implements Player, Piece {
 
             ArrayList<Edge> safeEdges = this.board.getSafeEdges();
             if (safeEdges.size() == 0) {
+
+                if (this.numCellsToPointsMade == null) {
+                    this.numCellsToPointsMade = this.generateNumCellsToPointsMade();
+                    // for (Map.Entry<Integer ,ArrayList<Point>> entry : this.numCellsToPointsMade.entrySet()) {
+                    //     int numCells = entry.getKey();
+                    //     ArrayList<Point> edgePoints = entry.getValue();
+                    //     System.out.println("Num cells :" + numCells);
+                    //     System.out.println("Number of the points :" + edgePoints.size());
+                    // }
+                }
+
                 edgesToRandomFrom = this.board.getAllUncapturedEdges();
             } else {
                 edgesToRandomFrom = safeEdges;
@@ -106,6 +119,110 @@ public class MiniMaxPlayer implements Player, Piece {
 
         this.board.update(m);
         return m;
+    }
+
+    /* Generate a dictionary where the key is the number of cells that could
+     * be captured in one go if the opponent is to make a move in the array of points
+     * (the value of dictionary)
+     *
+     * Call this function when there are no more safe edges left in the board
+     */
+    public HashMap<Integer, ArrayList<Point>> generateNumCellsToPointsMade() {
+        if (this.board.getSafeEdges().size() != 0) {
+            return null;
+        }
+
+        char[][] boardState = this.board.getBoardIn2DArray();
+        ArrayList<Point> uncapturedEdgePoints = new ArrayList<Point>();
+        for (Point edgePoint: this.edgeAssociatedCells.keySet()) {
+            if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
+                uncapturedEdgePoints.add(edgePoint);
+            }
+        }
+
+        HashMap<Integer, ArrayList<Point>> numCellsToPointsMade = new HashMap<Integer, ArrayList<Point>>();
+        for (Point edgePoint: uncapturedEdgePoints) {
+            char[][] dupBoard = copyBoard(boardState);
+            int edgeX = edgePoint.getX();
+            int edgeY = edgePoint.getY();
+            dupBoard[edgeX][edgeY] = this.edgeIdentity;
+
+            // Start recursion function
+            ArrayList<Point> affectedCells = this.edgeAssociatedCells.get(edgePoint);
+            int numCells = calculateCellsCapturable(dupBoard, affectedCells);
+
+            ArrayList<Point> edgePoints;
+            if (numCellsToPointsMade.get(numCells) == null) {
+                // New number of cells capturable
+                edgePoints = new ArrayList<Point>();
+            } else {
+                edgePoints = numCellsToPointsMade.get(numCells);
+            }
+            edgePoints.add(edgePoint);
+            numCellsToPointsMade.put(numCells, edgePoints);
+        }
+
+        return numCellsToPointsMade;
+    }
+
+    /* Recursive function to return the number of cells that could be captured based on a move made by opposing player
+     */
+    private int calculateCellsCapturable(char[][] boardState, ArrayList<Point> affectedCells) {
+        int numCells = 0;
+
+        if (affectedCells != null) {
+            // Loop through the associated cell, and get all the edges that belong to the cell
+            for (Point cellPoint: affectedCells) {
+                ArrayList<Point> allAssociatedEdgePoints = Cell.getPointOfCellEdges(cellPoint);
+                Point nextEdgePoint = null;
+                boolean firstEdgeUncaptured = true;
+
+                for (Point edgePoint: allAssociatedEdgePoints) {
+                    if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
+                        if (firstEdgeUncaptured) {
+                            firstEdgeUncaptured = false;
+                            nextEdgePoint = edgePoint;
+                        } else {
+                            nextEdgePoint = null;
+                            break;
+                        }
+                    }
+                }
+
+                if (nextEdgePoint != null) {
+                    boardState[nextEdgePoint.getX()][nextEdgePoint.getY()] = this.edgeIdentity;
+                    numCells++;
+
+                    // There is either none or one nextAffectedCell
+                    Point nextAffectedCell = null;
+                    for (Point nextCellPoint: getAssociatedCellPoints(nextEdgePoint)) {
+                        if (!nextCellPoint.equals(cellPoint)) {
+                            nextAffectedCell = nextCellPoint;
+                            break;
+                        }
+                    }
+
+                    ArrayList<Point> nextAffectedCells = null;
+                    if (nextAffectedCell != null) {
+                        nextAffectedCells = new ArrayList<Point>();
+                        nextAffectedCells.add(nextAffectedCell);
+                    }
+                    numCells += calculateCellsCapturable(boardState, nextAffectedCells);
+                }
+            }
+        }
+
+        return numCells;
+    }
+
+    private ArrayList<Point> getAssociatedCellPoints(Point edgePoint) {
+        for (Point p: this.edgeAssociatedCells.keySet()) {
+            if (p.equals(edgePoint)) {
+                return this.edgeAssociatedCells.get(p);
+            }
+        }
+
+        return null;
     }
 
     /* Recursive minimax at level of depth for either maximizing or minimizing player.
