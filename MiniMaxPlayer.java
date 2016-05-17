@@ -8,6 +8,7 @@ import aiproj.hexifence.*;
 import java.io.PrintStream;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Random;
 import java.lang.Math;
@@ -60,6 +61,7 @@ public class MiniMaxPlayer implements Player, Piece {
      * */
     @Override
     public Move makeMove() {
+        int THRESHOLD = 15;
         Move m = new Move();
 
         Point capturePoint = this.board.pointToCaptureCell();
@@ -67,7 +69,7 @@ public class MiniMaxPlayer implements Player, Piece {
             m.P = this.player;
             m.Row = capturePoint.getX();
             m.Col = capturePoint.getY();
-        } else if (this.board.getSafeEdges().size() == 0) {
+        } else if (this.board.getPossibleMoves() <= THRESHOLD) {
             // Start invoking minimax when no safe edges are left
             char[][] boardState = this.board.getBoardIn2DArray();
             HashMap<Integer, Move> myBestMove = minimax(boardState, this.board.getPossibleMoves(), true);
@@ -120,9 +122,9 @@ public class MiniMaxPlayer implements Player, Piece {
                 // Try this move on the player
             	Point capturedCellPoint = checkIfCaptureCell(move, boardState);
                 char[][] childBoard = generateChildBoardState(move, boardState, capturedCellPoint);
+            	HashMap<Integer, Move> result;
 
                 if (maxPlayer) {
-                	HashMap<Integer, Move> result;
                 	if (capturedCellPoint != null) {
                 		result = minimax(childBoard, possibleMoves-1, true);
                 	}
@@ -136,7 +138,6 @@ public class MiniMaxPlayer implements Player, Piece {
                     }
                 }
                 else {
-                	HashMap<Integer, Move> result;
                 	if (capturedCellPoint != null) {
                 		result = minimax(childBoard, possibleMoves-1, false);
                 	}
@@ -203,7 +204,7 @@ public class MiniMaxPlayer implements Player, Piece {
      * */
     private char[][] generateChildBoardState(Move move, char[][] boardState, Point capturedCellPoint) {
         // Copy board state over and make a move
-        char[][] newBoardState = boardState.clone();
+        char[][] newBoardState = this.copyBoard(boardState);
         // If maxPlayer, means it is this player's turn, so move was made by opponent
         newBoardState[move.Row][move.Col] = move.P == this.player ? this.edgeIdentity : this.oppEdgeIdentity;
         if (capturedCellPoint != null) {
@@ -216,7 +217,7 @@ public class MiniMaxPlayer implements Player, Piece {
     /* Check if move is a capturing cell move
      * */
     Point checkIfCaptureCell(Move move, char[][] boardState) {
-    	char[][] newBoardState = boardState.clone();
+    	char[][] newBoardState = this.copyBoard(boardState);
     	newBoardState[move.Row][move.Col] = move.P == this.player ? this.edgeIdentity : this.oppEdgeIdentity;
 
         // Get the cell point associated with the captured edge
@@ -248,6 +249,15 @@ public class MiniMaxPlayer implements Player, Piece {
             }
         }
         return null;
+    }
+
+    private char[][] copyBoard(char[][] boardState) {
+        int size = boardDimension*4 - 1;
+        char[][] dupBoard = new char[size][size];
+        for (int i=0; i < size; i++) {
+            dupBoard[i] = Arrays.copyOf(boardState[i], size);
+        }
+        return dupBoard;
     }
 
     /* Function called by referee to inform the player about the opponent's move
