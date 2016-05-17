@@ -134,7 +134,7 @@ public class AlphaPlayer implements Player, Piece {
 				// Update history score for best move
 				int historyScore = 0;
 				if (bestMoveHistoryScore.get(bestMove) != null) {
-					bestMoveHistoryScore.get(bestMove); 
+					bestMoveHistoryScore.get(bestMove);
 				}
 				bestMoveHistoryScore.put(bestMove, historyScore + 2);
 			}
@@ -209,12 +209,8 @@ public class AlphaPlayer implements Player, Piece {
 			int index = sortedScore.indexOf(historyScore);
 			sortedMoves.add(index, moves.get(n));
 		}
-<<<<<<< HEAD
-		return sortedMoves;
-=======
 
-        return sortedMoves;
->>>>>>> c45bdde9f43b408b685950fa9c732fc3de20686a
+		return sortedMoves;
 	}
 
 	/* Generate a list of all legal moves of existing boardState
@@ -268,13 +264,8 @@ public class AlphaPlayer implements Player, Piece {
 			char cellValue = newBoardState[cellPoints.getX()][cellPoints.getY()];
 			if (numEdgeCaptured == Board.HEXAGON &&
 					cellValue == Board.NA_POINT) {
-<<<<<<< HEAD
 				cellValue = maximizingPlayer ? this.cellIdentity : this.oppCellIdentity;
-			}		
-=======
-				cellValue = maximizingPlayer ? this.cellIdentity : this.opponentCellIdentity;
 			}
->>>>>>> c45bdde9f43b408b685950fa9c732fc3de20686a
 		}
 		return newBoardState;
 	}
