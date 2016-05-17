@@ -18,7 +18,7 @@ import java.lang.Math;
  *  MiniMax player
  *  Implements minimax logic
  */
-public class AlphaBetaPlayer implements Player, Piece {
+public class HistoryAlphaPlayer implements Player, Piece {
 
     private Board board;
     private int boardDimension;
@@ -122,6 +122,8 @@ public class AlphaBetaPlayer implements Player, Piece {
         }
         else {
             bestValue = maxPlayer ? Integer.MIN_VALUE : Integer.MAX_VALUE;
+            // Sort moves such that the highest rated move is at the end
+            moves = sortMoveBasedOnHistory(moves);
             // For each valid move, generate child node and recurse minimax
             for (Move move: moves) {
                 // Try this move on the player
@@ -164,6 +166,11 @@ public class AlphaBetaPlayer implements Player, Piece {
                     }
                 }
             }
+            int historyScore = 0;
+            if (bestMoveHistoryScore.get(bestMove) != null) {
+                bestMoveHistoryScore.get(bestMove);
+            }
+            bestMoveHistoryScore.put(bestMove, historyScore + 2);
         }
 
         HashMap<Integer, Move> bestStrategy = new HashMap<Integer, Move>();
@@ -211,6 +218,39 @@ public class AlphaBetaPlayer implements Player, Piece {
             }
         }
         return allLegalMoves;
+    }
+
+    /* Sort an array list of Move based on the history heuristic score
+     * assigned to each move
+     * */
+    private ArrayList<Move> sortMoveBasedOnHistory(ArrayList<Move> moves) {
+        // Don't do anything if history score table is empty
+        if (bestMoveHistoryScore.isEmpty()) {
+            return moves;
+        }
+        ArrayList<Move> sortedMoves = new ArrayList<Move>();
+        // Sort an array of history score
+        ArrayList<Integer> sortedScore = new ArrayList<Integer>();
+        for (Move move: moves) {
+            if (bestMoveHistoryScore.get(move) == null) {
+                continue;
+            }
+            int historyScore = bestMoveHistoryScore.get(move);
+            sortedScore.add(historyScore);
+        }
+        Collections.reverse(sortedScore);
+
+        // Allocate moves to same index location as that of sorted score(s)
+        for (int n = 0; n < moves.size(); n++) {
+            if (bestMoveHistoryScore.get(moves.get(n)) == null) {
+                continue;
+            }
+            int historyScore = bestMoveHistoryScore.get(moves.get(n));
+            System.out.println(moves.get(n).Row + " " + moves.get(n).Col + " " + historyScore);
+            int index = sortedScore.indexOf(historyScore);
+            sortedMoves.add(index, moves.get(n));
+        }
+        return sortedMoves;
     }
 
     /* Generate board child node based on a new move applied by player
