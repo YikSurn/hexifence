@@ -81,18 +81,18 @@ public class HistoryAlphaPlayer implements Player, Piece {
             m.Row = capturePoint.getX();
             m.Col = capturePoint.getY();
         } else if (this.board.getSafeEdges().size() == 0) {
+            char[][] boardState = this.board.getBoardIn2DArray();
+
             // Choose edge that gives opponent least number of cells when there are no more safe edges
             if (this.numCellsToPointsMade == null) {
-                char[][] boardState = this.board.getBoardIn2DArray();
                 this.numCellsToPointsMade = this.generateNumCellsToPointsMade(boardState);
             }
 
-            Point bestMovePoint = getPointThatCaptureLowestNumCells(this.numCellsToPointsMade);
+            Point bestMovePoint = getPointThatCaptureLowestNumCells(boardState, this.numCellsToPointsMade);
             m.P = this.player;
             m.Row = bestMovePoint.getX();
             m.Col = bestMovePoint.getY();
         } else if (this.board.getPossibleMoves() <= THRESHOLD) {
-        	System.out.println("Alpha beta");
             // Start invoking minimax when below threshold
             char[][] boardState = this.board.getBoardIn2DArray();
 
@@ -125,11 +125,11 @@ public class HistoryAlphaPlayer implements Player, Piece {
 
     /* Return the point on board that will capture the minimum number of cells
     */
-    private Point getPointThatCaptureLowestNumCells(Map<Integer, ArrayList<Point>> numCellsToPointsMade) {
+    private Point getPointThatCaptureLowestNumCells(char[][] boardState, Map<Integer, ArrayList<Point>> numCellsToPointsMade) {
         // TreeMap is already sorted
         for (ArrayList<Point> edgePointBatch: numCellsToPointsMade.values()) {
             for (Point edgePoint: edgePointBatch) {
-                if (!this.board.getEdge(edgePoint).getHasBeenCaptured()) {
+                if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
                     return edgePoint;
                 }
             }
@@ -273,17 +273,84 @@ public class HistoryAlphaPlayer implements Player, Piece {
     */
     private int predictWinningBoardState(char[][] boardState, int possibleMoves, boolean maxPlayer) {
         Map<Integer, ArrayList<Point>> numCellsToPointsMade = this.generateNumCellsToPointsMade(boardState);
-        while(possibleMoves > 0) {
-            Point bestPoint = getPointThatCaptureLowestNumCells(numCellsToPointsMade);
+
+        while(this.getNumUncapturedEdges(boardState) > 0) {
+            Point bestPoint = getPointThatCaptureLowestNumCells(boardState, numCellsToPointsMade);
+            ArrayList<Point> affectedCellPoints = getAssociatedCellPoints(bestPoint);
             if (maxPlayer) {
                 boardState[bestPoint.getX()][bestPoint.getY()] = this.edgeIdentity;
+                boardState = captureCellsRecursive(boardState, affectedCellPoints, !maxPlayer);
             }
             else {
-                boardState[bestPoint.getX()][bestPoint.getY()] = this.oppCellIdentity;
+                boardState[bestPoint.getX()][bestPoint.getY()] = this.oppEdgeIdentity;
+                boardState = captureCellsRecursive(boardState, affectedCellPoints, maxPlayer);
             }
             possibleMoves--;
         }
         return evaluateBoardState(boardState);
+    }
+
+    private int getNumUncapturedEdges(char[][] boardState) {
+        int numUncapturedEdges = 0;
+        int boardSize = boardState.length;
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                if (boardState[row][col] == Board.EMPTY_EDGE) {
+                    numUncapturedEdges++;
+                }
+            }
+        }
+
+        return numUncapturedEdges;
+    }
+
+    private char[][] captureCellsRecursive(char[][] boardState, ArrayList<Point> affectedCellPoints, boolean maxPlayer) {
+        if (affectedCellPoints != null) {
+            // Loop through points of associated cell, and get all the edges that belong to the cell
+            for (Point cellPoint: affectedCellPoints) {
+                ArrayList<Point> allAssociatedEdgePoints = Cell.getPointOfCellEdges(cellPoint);
+                Point nextEdgePoint = null;
+                boolean firstEdgeUncaptured = true;
+
+                for (Point edgePoint: allAssociatedEdgePoints) {
+                    if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
+                        if (firstEdgeUncaptured) {
+                            firstEdgeUncaptured = false;
+                            nextEdgePoint = edgePoint;
+                        } else {
+                            nextEdgePoint = null;
+                            break;
+                        }
+                    }
+                }
+
+                if (nextEdgePoint != null) {
+                    if (maxPlayer) {
+                        boardState[nextEdgePoint.getX()][nextEdgePoint.getY()] = this.edgeIdentity;
+                    } else {
+                        boardState[nextEdgePoint.getX()][nextEdgePoint.getY()] = this.oppEdgeIdentity;
+                    }
+
+                    // There is either none or one nextAffectedCell
+                    Point nextAffectedCell = null;
+                    for (Point nextCellPoint: this.getAssociatedCellPoints(nextEdgePoint)) {
+                        if (!nextCellPoint.equals(cellPoint)) {
+                            nextAffectedCell = nextCellPoint;
+                            break;
+                        }
+                    }
+
+                    ArrayList<Point> nextAffectedCellPoints = null;
+                    if (nextAffectedCell != null) {
+                        nextAffectedCellPoints = new ArrayList<Point>();
+                        nextAffectedCellPoints.add(nextAffectedCell);
+                    }
+                    boardState = captureCellsRecursive(boardState, nextAffectedCellPoints, maxPlayer);
+                }
+            }
+        }
+
+        return boardState;
     }
 
     /* Generate a dictionary where the key is the number of cells that can
