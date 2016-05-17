@@ -9,11 +9,9 @@ import java.io.PrintStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Random;
 import java.util.TreeMap;
-import java.lang.Math;
 import java.util.Map;
 
 /*
@@ -419,22 +417,6 @@ public class MiniMaxPlayer implements Player, Piece {
             }
         }
         return allLegalMoves;
-    }
-
-    private ArrayList<Point> generateLegalPoints(char[][] boardState) {
-        ArrayList<Point> allLegalPoints = new ArrayList<Point>();
-        int boardSize = boardState.length;
-
-        for (int row = 0; row < boardSize; row++) {
-            for (int col = 0; col < boardSize; col++) {
-                // Represents a possible move that's available for capture
-                if (boardState[row][col] == Board.EMPTY_EDGE) {
-                    Point legalPoint = new Point(row, col);
-                    allLegalPoints.add(legalPoint);
-                }
-            }
-        }
-        return allLegalPoints;
     }
 
     /* Generate board child node based on a new move applied by player
