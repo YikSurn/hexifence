@@ -348,6 +348,7 @@ public class MiniMaxPlayer implements Player, Piece {
                 boardState[bestPoint.getX()][bestPoint.getY()] = this.oppCellIdentity;
             }
             possibleMoves--;
+            maxPlayer = !maxPlayer;
         }
         return evaluateBoardState(boardState);
     }
