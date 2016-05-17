@@ -34,6 +34,10 @@ public class HeuristicEvalPlayer implements Player, Piece {
     	return 0;
     }
 
+    private int checkIfGoalState(char[][] boardState) {
+
+    }
+
     /* Return a list of possible optimal move based on a given
     condition (so as to only consider these moves)
     */
