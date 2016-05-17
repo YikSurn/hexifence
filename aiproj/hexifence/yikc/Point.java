@@ -1,9 +1,11 @@
-import java.io.Serializable;
-
 /* Authors:
  * Yik Surn Chong (yikc)
  * Angeline Lim (angelinel)
  */
+
+package aiproj.hexifence.yikc;
+
+import java.io.Serializable;
 
 public class Point {
 
