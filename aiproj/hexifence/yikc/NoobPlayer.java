@@ -3,21 +3,26 @@
  * Angeline Lim (angelinel)
  */
 
+package aiproj.hexifence.yikc;
+
 import aiproj.hexifence.*;
 
 import java.io.PrintStream;
 import java.util.Random;
+import java.util.ArrayList;
 
 /*
- *  Random player
+ *  Noob player
+ *  Makes random moves but does not choose an edge where number of uncaptured edges in the cell is 2
+ *  Captures a cell if it could be captured
  */
-public class RandomPlayer implements Player, Piece {
+public class NoobPlayer implements Player, Piece {
 
     private Board board;
     private int player;
     private int boardDimension;
 
-    /* This function is called by the referee to initialise the player.
+    /* This function is called by the referee to initialize the player.
      *  Return 0 for successful initialization and -1 for failed one.
      */
     @Override
@@ -38,22 +43,34 @@ public class RandomPlayer implements Player, Piece {
      */
     @Override
     public Move makeMove() {
-        Random random = new Random();
-        int max = this.board.getBoardDimension()*4 - 1;
-        int row = random.nextInt(max);
-        int col = random.nextInt(max);
-        Point point = new Point(row, col);
+        Point chosenPoint;
 
-        while (!this.board.validPoint(point)) {
-            row = random.nextInt(max);
-            col = random.nextInt(max);
-            point.setPoint(row, col);
+        // Captures a cell if it could be captured
+        Point capturePoint = this.board.pointToCaptureCell();
+        if (capturePoint != null) {
+            chosenPoint = capturePoint;
+        }
+        else {
+            ArrayList<Edge> edgesToRandomFrom;
+
+            ArrayList<Edge> safeEdges = this.board.getSafeEdges();
+            if (safeEdges.size() == 0) {
+                edgesToRandomFrom = this.board.getAllUncapturedEdges();
+            } else {
+                edgesToRandomFrom = safeEdges;
+            }
+
+            int numEdges = edgesToRandomFrom.size();
+
+            Random random = new Random();
+            int indexEdgeChosen = random.nextInt(numEdges);
+            chosenPoint = edgesToRandomFrom.get(indexEdgeChosen).getPoint();
         }
 
         Move m = new Move();
         m.P = this.player;
-        m.Row = row;
-        m.Col = col;
+        m.Row = chosenPoint.getX();
+        m.Col = chosenPoint.getY();
 
         this.board.update(m);
         return m;

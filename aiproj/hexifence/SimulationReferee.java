@@ -28,16 +28,20 @@ public class SimulationReferee implements Piece{
 
         double startTime = System.currentTimeMillis();
         for (int i=0; i<NUM_GAMES; i++) {
-            if (i%(NUM_GAMES/10) == 0) {
+            if (i%10 == 0) {
                 System.out.println("Game No. : " + (i+1));
             }
 
+            double gameStartTime = System.currentTimeMillis();
             winner = playGame(args);
             if (winner == BLUE) {
                 blueWins++;
             } else if (winner == RED) {
                 redWins++;
             }
+            double gameEndTime = System.currentTimeMillis();
+            double gameTotalTime = gameEndTime - gameStartTime;
+            System.out.println("Total time taken for game (seconds) : " + (gameTotalTime/1000));
         }
         double endTime = System.currentTimeMillis();
         double totalTime = endTime - startTime;

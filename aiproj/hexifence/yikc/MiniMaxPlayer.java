@@ -3,6 +3,8 @@
  * Angeline Lim (angelinel)
  */
 
+package aiproj.hexifence.yikc;
+
 import aiproj.hexifence.*;
 
 import java.io.PrintStream;
