@@ -246,9 +246,12 @@ public class HistoryAlphaPlayer implements Player, Piece {
                 continue;
             }
             int historyScore = bestMoveHistoryScore.get(moves.get(n));
-            System.out.println(moves.get(n).Row + " " + moves.get(n).Col + " " + historyScore);
             int index = sortedScore.indexOf(historyScore);
             sortedMoves.add(index, moves.get(n));
+        }
+        // If none of the move exist in our history table, return unsorted move
+        if (sortedMoves.isEmpty()) {
+            return moves;
         }
         return sortedMoves;
     }
