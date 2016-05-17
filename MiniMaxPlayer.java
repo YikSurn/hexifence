@@ -142,6 +142,7 @@ public class MiniMaxPlayer implements Player, Piece {
      */
     public Map<Integer, ArrayList<Point>> generateNumCellsToPointsMade(char[][] boardState) {
         if (this.getNumSafeEdges(boardState) != 0) {
+            System.out.println("I was evaluated");
             return null;
         }
 
@@ -313,29 +314,30 @@ public class MiniMaxPlayer implements Player, Piece {
     */
     private int getNumSafeEdges(char[][] boardState) {
         int MIN_SAFE_UNCAPTURED_EDGES = 3;
-        // Assume no safe edges 
-        int safeEdges = 0;
+        int numSafeEdge = 0;
 
-        ArrayList<Point> allCellPoints = new ArrayList<Point>();
-        ArrayList<Cell> boardCells = this.board.getCells();
-        for (Cell cell: boardCells) {
-            allCellPoints.add(cell.getPointOnBoard());
-        }
-        // Check if edge of point is captured, 
-        for (Cell cell: boardCells) {
-            int emptyEdges = 0;
-            // For every edges associated with cell, if empty edges exceeds threshold
-            for (Point edgePoint: Cell.getPointOfCellEdges(cell.getPointOnBoard())) {
-                if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE){
-                    emptyEdges++;
+        // For each available edge, check if it's a safe edge
+        for (Point edgePoint: edgeAssociatedCells.keySet()) {
+            if (boardState[edgePoint.getX()][edgePoint.getY()] == Board.EMPTY_EDGE) {
+                boolean safeEdge = true;
+                for(Point cellPoint: this.edgeAssociatedCells.get(edgePoint)) {
+                    int emptyEdge = 0;
+                    for (Point associatedEdge: Cell.getPointOfCellEdges(cellPoint)) {
+                        if (boardState[associatedEdge.getX()][associatedEdge.getY()] == Board.EMPTY_EDGE) {
+                            emptyEdge++;
+                        }
+                    }
+                    // if unoccupied edge is more than a threshold, this edge is safe
+                    if (emptyEdge < MIN_SAFE_UNCAPTURED_EDGES) {
+                        safeEdge = false;
+                    }
+                }
+                if (safeEdge) {
+                    numSafeEdge++;
                 }
             }
-            // consider as safe edges
-            if (emptyEdges >= MIN_SAFE_UNCAPTURED_EDGES) {
-                safeEdges++;
-            }
         }
-        return safeEdges;
+        return numSafeEdge;
     }
 
     /* Return the point on board that will capture the minimum number of cells
