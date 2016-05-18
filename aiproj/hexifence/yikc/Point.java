@@ -5,8 +5,8 @@
 
 package aiproj.hexifence.yikc;
 
-import java.io.Serializable;
-
+/* Point class
+ */
 public class Point {
 
     private int x;

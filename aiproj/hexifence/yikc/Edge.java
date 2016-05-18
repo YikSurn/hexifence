@@ -4,8 +4,9 @@
  */
 
 package aiproj.hexifence.yikc;
-import java.io.Serializable;
 
+/* Edge class
+ */
 public class Edge {
 
     private boolean hasBeenCaptured;
@@ -19,6 +20,10 @@ public class Edge {
 
     public boolean getHasBeenCaptured() {
         return this.hasBeenCaptured;
+    }
+
+    public int getCapturedBy() {
+        return capturedBy;
     }
 
     public Point getPoint() {
@@ -43,9 +48,5 @@ public class Edge {
             return false;
         }
     }
-
-	public int getCapturedBy() {
-		return capturedBy;
-	}
 
 }

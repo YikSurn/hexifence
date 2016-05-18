@@ -46,7 +46,7 @@ public class NoobPlayer implements Player, Piece {
         Point chosenPoint;
 
         // Captures a cell if it could be captured
-        Point capturePoint = this.board.pointToCaptureCell();
+        Point capturePoint = this.board.getCapturableCellPoint();
         if (capturePoint != null) {
             chosenPoint = capturePoint;
         }

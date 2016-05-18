@@ -70,7 +70,7 @@ public class MiniMaxPlayer implements Player, Piece {
         Move m = new Move();
 
         // Capture a cell when possible
-        Point capturePoint = this.board.pointToCaptureCell();
+        Point capturePoint = this.board.getCapturableCellPoint();
         if (capturePoint != null) {
             m.P = this.player;
             m.Row = capturePoint.getX();

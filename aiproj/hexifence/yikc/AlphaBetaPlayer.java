@@ -74,7 +74,7 @@ public class AlphaBetaPlayer implements Player, Piece {
 
         Move m = new Move();
 
-        Point capturePoint = this.board.pointToCaptureCell();
+        Point capturePoint = this.board.getCapturableCellPoint();
         if (capturePoint != null) {
             m.P = this.player;
             m.Row = capturePoint.getX();

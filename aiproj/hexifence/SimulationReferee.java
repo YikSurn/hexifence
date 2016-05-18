@@ -13,7 +13,7 @@ package aiproj.hexifence;
 
 public class SimulationReferee implements Piece{
 
-    private static int NUM_GAMES = 100;
+    private static int NUM_GAMES = 50;
     private static Player P1;
     private static Player P2;
     private static Move lastPlayedMove;
