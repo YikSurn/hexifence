@@ -75,7 +75,8 @@ public class yikc implements Player, Piece {
     public Move makeMove() {
         // Threshold of possible moves left in the game before starting
         // algorithm
-        int THRESHOLD = 35;
+        int numSafeEdges = this.board.getSafeEdges().size();
+        int THRESHOLD = 15;
 
         // Declare constants for alpha beta pruning
         int ALPHA = Integer.MIN_VALUE;
@@ -90,7 +91,7 @@ public class yikc implements Player, Piece {
             m.P = this.player;
             m.Row = capturePoint.getX();
             m.Col = capturePoint.getY();
-        } else if (this.board.getSafeEdges().size() == 0) {
+        } else if (numSafeEdges == 0) {
             // There are no safe edges left, make a move that would give
             // opponent least number of cells to capture
             char[][] boardState = this.board.getBoardIn2DArray();
@@ -107,7 +108,7 @@ public class yikc implements Player, Piece {
             m.P = this.player;
             m.Row = bestMovePoint.getX();
             m.Col = bestMovePoint.getY();
-        } else if (this.board.getPossibleMoves() <= THRESHOLD) {
+        } else if (numSafeEdges <= THRESHOLD) {
             // At or below threshold, Start invoking algorithm
             char[][] boardState = this.board.getBoardIn2DArray();
 
