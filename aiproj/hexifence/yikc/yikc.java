@@ -76,7 +76,7 @@ public class yikc implements Player, Piece {
         // Threshold of possible moves left in the game before starting
         // algorithm
         int numSafeEdges = this.board.getSafeEdges().size();
-        int THRESHOLD = 15;
+        int THRESHOLD = 11;
 
         // Declare constants for alpha beta pruning
         int ALPHA = Integer.MIN_VALUE;
