@@ -21,7 +21,7 @@ import java.lang.Math;
  *  Alpha-beta with history heuristic player
  *  Implements alpha-beta pruning logic with history heuristic
  */
-public class HistoryAlphaPlayer implements Player, Piece {
+public class yikc implements Player, Piece {
 
     private Board board;
 
