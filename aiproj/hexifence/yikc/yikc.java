@@ -244,7 +244,7 @@ public class yikc implements Player, Piece {
                 childBoard = generateChildBoardState(move, boardState);
 
                 if (maxPlayer) {
-                    result = alphaBeta(childBoard, alpha, beta, false);
+                    result = alphaBeta(childBoard, alpha, beta, !maxPlayer);
                     resultValue = (int) result.keySet().toArray()[0];
                     if (resultValue > bestValue) {
                         bestValue = resultValue;
@@ -256,7 +256,7 @@ public class yikc implements Player, Piece {
                     }
                 }
                 else {
-                    result = alphaBeta(childBoard, alpha, beta, true);
+                    result = alphaBeta(childBoard, alpha, beta, maxPlayer);
                     resultValue = (int) result.keySet().toArray()[0];
                     if (resultValue < bestValue) {
                         bestValue = resultValue;
