@@ -45,7 +45,8 @@ public class Board implements Piece {
         this.possibleMoves = this.countPossibleMoves();
     }
 
-    /* Recursive function to return number of cells in a board given the board dimension
+    /* Recursive function to return number of cells in a board given the board
+     * dimension
      */
     public static int numberOfCells(int boardDimension) {
         int outerCells;
@@ -80,8 +81,8 @@ public class Board implements Piece {
         this.lastOpponentPoint = point;
     }
 
-    /* A class method that generates a dictionary of each edge point on board to its
-     * respective cell(s) point(s)
+    /* A class method that generates a dictionary of each edge point on board
+     * to its respective cell(s) point(s)
      */
     public HashMap<Point, ArrayList<Point>> generateEdgeToCellsPoints() {
         int MAX_CELL = 2;
@@ -89,9 +90,11 @@ public class Board implements Piece {
         Point edgePoint;
         ArrayList<Cell> edgeCells;
         ArrayList<Point> cellPoints;
-        HashMap<Point, ArrayList<Point>> edgeToCellPoints = new HashMap<Point, ArrayList<Point>>();
+        HashMap<Point, ArrayList<Point>> edgeToCellPoints = new HashMap<Point,
+            ArrayList<Point>>();
 
-        for (Map.Entry<Edge,ArrayList<Cell>> entry : this.EdgeToCells.entrySet()) {
+        for (Map.Entry<Edge,ArrayList<Cell>> entry: this.EdgeToCells.entrySet())
+        {
             edge = entry.getKey();
             edgeCells = entry.getValue();
 
@@ -122,9 +125,12 @@ public class Board implements Piece {
                 // Check if uncaptured edge has an another adjacent cell
                 if (cells.size() == 2) {
                     for (Cell adjacentCell: cells) {
-                        // Check if the adjacent cell can be captured in one move
-                        // If yes, max cells that can be captured is these two cells
-                        if (adjacentCell != c && adjacentCell.canCaptureInOneMove()) {
+                        // Check if the adjacent cell can be captured in
+                        // one move
+                        // If yes, max cells that can be captured is these
+                        // two cells
+                        if (adjacentCell != c &&
+                            adjacentCell.canCaptureInOneMove()) {
                             return 2;
                         }
                     }
@@ -237,7 +243,8 @@ public class Board implements Piece {
         int blueCells = this.getPlayerCells(BLUE);
 
         if (redCells == blueCells) {
-            // Game is a draw, which shouldn't occur as there are an odd number of cells
+            // Game is a draw, which shouldn't occur as there are an odd
+            // number of cells
             return DEAD;
         } else if (redCells > blueCells) {
             return RED;
@@ -371,7 +378,8 @@ public class Board implements Piece {
         return uncapturedEdges;
     }
 
-    /* Return edges where it would not lead to an opponent capturing a cell in the next turn
+    /* Return edges where it would not lead to an opponent capturing a cell in
+     * the next turn
      */
     public ArrayList<Edge> getSafeEdges() {
         int MIN_SAFE_UNCAPTURED_EDGES = 3;
@@ -414,7 +422,8 @@ public class Board implements Piece {
             leftIndent = Math.max(0, i - boardSize/2);
             rightIndent = Math.max(0, boardSize/2 - i);
 
-            for (int j = 1 + leftIndent; j < (boardSize - rightIndent); j += 2) {
+            for (int j = 1 + leftIndent; j < (boardSize - rightIndent); j += 2)
+            {
                 cellPoints.add(new Point(i, j));
                 cellActualPoints.add(new Point(countX, countY));
                 countY++;
@@ -422,12 +431,14 @@ public class Board implements Piece {
             countX++;
         }
 
-        // Loop through cell points, instantiate cells and add their edges to the cells
+        // Loop through cell points, instantiate cells and add their edges to
+        // the cells
         Cell cell;
         Edge edge;
         ArrayList<Cell> edgeCells;
         ArrayList<Point> edgePointsOfCell;
-        HashMap<Point, Edge> allEdgePoints = new HashMap<Point, Edge>(); // {points of edge: edge}
+        // {points of edge: edge}
+        HashMap<Point, Edge> allEdgePoints = new HashMap<Point, Edge>();
         for (int i = 0; i < cellPoints.size(); i++) {
             cell = new Cell(cellPoints.get(i), cellActualPoints.get(i));
             edgePointsOfCell = Cell.getPointOfCellEdges(cellPoints.get(i));
@@ -443,8 +454,8 @@ public class Board implements Piece {
                 }
 
                 if (edge != null) {
-                    // edge already exist/created, update the edge with list of cells its
-                    // associated with
+                    // edge already exist/created, update the edge with
+                    // list of cells its associated with
                     edgeCells = EdgeToCells.get(edge);
 
                     edgeCells.add(cell);
